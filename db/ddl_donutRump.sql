@@ -1,3 +1,4 @@
+drop schema if exists donutrump;
 create schema donutrump; 
 use donutrump;
 
@@ -31,7 +32,7 @@ create table categoria(
 create table prodottoGenerico(
     id int auto_increment primary key,
     nome varchar(45) not null,
-    quantita_disponibile int not null,
+    quantitaDisponibile int not null,
     prezzo double precision not null,
     iva double precision not null,
     disponibilita boolean not null,
@@ -53,7 +54,7 @@ create table metodoPagamento
  create table ordine(
  id bigint auto_increment primary key,
  idUtente bigint,
- idIndirizzo bigint auto_increment,
+ idIndirizzo bigint,
  stato enum('consegnato', 'spedito', 'ricevuto', 'attesa'),
  dataOrdine date not null,
  importoTotale double precision default 0,
@@ -62,7 +63,7 @@ create table metodoPagamento
  dataConsegna date not null,
 
  foreign key (idUtente) references utente(id) on update cascade on delete set null,
- foreign key (idInirizzo, idUtente) references Indirizzo(id, idUtente) on update no action on delete no action #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
+ foreign key (idIndirizzo, idUtente) references Indirizzo(id, idUtente) on update no action on delete no action #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
 );
 
 create table istanzaProdotto(
@@ -73,7 +74,7 @@ create table istanzaProdotto(
     
     primary key (ivaAcquisto, prezzoAcquisto, prodottoGenerico),
     foreign key (prodottoGenerico) references prodottoGenerico(id) on update cascade on delete cascade,
-    foreign key (ordine) references ordine(id) on update cascade on delete set null
+    foreign key (idOrdine) references ordine(id) on update cascade on delete set null
     );
     
 
