@@ -1,7 +1,7 @@
 //***********************************Bean di prodottogenerico
 package com.donutrump.model.bean;
 
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 
@@ -11,7 +11,7 @@ public class GeneralProductBean implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public GeneralProductBean() {
-		this.id = -1; 
+		this.id = 0; 
 		this.nome = ""; 
 		this.quantitaDisponibile = 0; 
 		this.prezzo= 0; 
@@ -82,6 +82,6 @@ public class GeneralProductBean implements Serializable{
 	private String descrizione; 
 	
   // private BufferedImage immagine; 
-  // private int categoria; 
+	private int categoria; 
 
 }
