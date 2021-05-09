@@ -32,7 +32,7 @@ create table categoria(
 create table prodottoGenerico(
     id int auto_increment primary key,
     nome varchar(45) not null,
-    quantitaDisponibile int not null,
+    quantita_disponibile int not null,
     prezzo double precision not null,
     iva double precision not null,
     disponibilita boolean not null,
