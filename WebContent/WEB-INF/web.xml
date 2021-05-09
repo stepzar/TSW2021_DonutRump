@@ -14,11 +14,11 @@
   </resource-ref>
   
   <servlet>
-    <servlet-name>ProductServlet</servlet-name>
-    <servlet-class>com.donutrump.control.ProductServlet</servlet-class>
+    <servlet-name>GeneralProductServlet</servlet-name>
+    <servlet-class>com.donutrump.control.GeneralProductServlet</servlet-class>
   </servlet>
   <servlet-mapping> <!--sarebbe un ALIAS -->
-    <servlet-name>ProductServlet</servlet-name>
+    <servlet-name>GeneralProductServlet</servlet-name>
     <url-pattern>/Product</url-pattern>
   </servlet-mapping>
 </web-app>
