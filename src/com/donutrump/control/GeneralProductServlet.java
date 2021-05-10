@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest; 
 import javax.servlet.http.HttpServletResponse;
 
-import com.donutrump.model.bean.GeneralProductBean;
-import com.donutrump.model.dao.GeneralProductDAO;
-
+import com.donutrump.model.bean.*;
+import com.donutrump.model.dao.*;
 
 public class GeneralProductServlet extends HttpServlet{
 	
@@ -27,7 +26,13 @@ public class GeneralProductServlet extends HttpServlet{
 			throws ServletException, IOException {
 
 		String action = request.getParameter("action");
-
+		
+		Cart cart = (Cart)request.getSession().getAttribute("cart");
+		if(cart == null) {
+			cart = new Cart();
+			request.getSession().setAttribute("cart", cart);
+		}
+		
 		try {
 			
 			if (action != null) {
@@ -35,6 +40,8 @@ public class GeneralProductServlet extends HttpServlet{
 					int id = Integer.parseInt(request.getParameter("id"));
 					request.removeAttribute("product");
 					request.setAttribute("product", model.doRetrieveByKey(id));
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductDetails.jsp");
+					dispatcher.forward(request, response);
 				} 
 				
 				else if (action.equalsIgnoreCase("delete")){
@@ -66,6 +73,16 @@ public class GeneralProductServlet extends HttpServlet{
 						
 					model.doSave(bean);
 				}
+				else if (action.equals("addcart")){
+					int id = Integer.parseInt(request.getParameter("id"));
+					
+					// aggiungi al carrello
+					cart.addProduct(model.doRetrieveByKey(id));
+				}
+				else if (action.equals("readcart")) {
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					dispatcher.forward(request, response);
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
@@ -75,6 +92,7 @@ public class GeneralProductServlet extends HttpServlet{
 		
 		
 		try {
+			System.out.println("servlet");
 			request.removeAttribute("products");
 			request.setAttribute("products", model.doRetrieveAll(sort));
 		} catch (SQLException e) {

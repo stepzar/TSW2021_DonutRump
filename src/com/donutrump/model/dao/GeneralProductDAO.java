@@ -148,46 +148,47 @@ public class GeneralProductDAO {
 
 
 	public synchronized Collection<GeneralProductBean> doRetrieveAll(String order) throws SQLException {
-	Connection connection = null;
-	PreparedStatement preparedStatement = null;
-
-	Collection<GeneralProductBean> products = new LinkedList<GeneralProductBean>();
-
-	String selectSQL = "SELECT * FROM " + TABLE_NAME;
-
-	if (order != null && !order.equals("")) { 
-	selectSQL += " ORDER BY " + order; 
-	}
-
-	try {
-	connection = ds.getConnection();
-	preparedStatement = connection.prepareStatement(selectSQL);
-
-	ResultSet rs = preparedStatement.executeQuery();
-
-	while (rs.next()) {                                     
-	GeneralProductBean bean = new GeneralProductBean();
-
-	bean.setId(rs.getInt("id"));
-	bean.setNome(rs.getString("nome"));
-	bean.setDescrizione(rs.getString("descrizione"));
-	bean.setPrezzo(rs.getInt("prezzo"));
-	bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
-	bean.setIva(rs.getDouble("iva"));
-	bean.setDisponibilita(rs.getBoolean("disponibilita"));
-	products.add(bean);
-	}
-
-	} finally {
-	try {
-	if (preparedStatement != null)
-	preparedStatement.close();
-	} finally {
-	if (connection != null)
-	connection.close();
-	}
-	}
-	return products;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+	
+		Collection<GeneralProductBean> products = new LinkedList<GeneralProductBean>();
+	
+		String selectSQL = "SELECT * FROM " + TABLE_NAME;
+	
+		if (order != null && !order.equals("")) { 
+			selectSQL += " ORDER BY " + order; 
+		}
+	
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+		
+			ResultSet rs = preparedStatement.executeQuery();
+		
+			while (rs.next()) {                                     
+				GeneralProductBean bean = new GeneralProductBean();
+			
+				bean.setId(rs.getInt("id"));
+				bean.setNome(rs.getString("nome"));
+				bean.setDescrizione(rs.getString("descrizione"));
+				bean.setPrezzo(rs.getInt("prezzo"));
+				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
+				bean.setIva(rs.getDouble("iva"));
+				bean.setDisponibilita(rs.getBoolean("disponibilita"));
+				products.add(bean);
+			}
+		} 
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+			}
+			finally {
+				if (connection != null)
+					connection.close();
+			}
+		}
+		return products;
 	}
 
 }

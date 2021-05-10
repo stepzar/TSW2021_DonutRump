@@ -14,6 +14,7 @@
 <html>
 <%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.GeneralProductBean"%>
 
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href="ProductStyle.css" rel="stylesheet" type="text/css">
@@ -21,13 +22,16 @@
 </head>
 
 <body>
+	<h2><a href="Product?action=readcart">Carrello</a></h2>
+
 	<h2>Prodotti</h2>
 	<a href="Product">List</a>
 	<table border="1">
 		<tr>
-			<th><a href="Product?sort=name">Nome</a></th>
-			<th><a href="Product?sort=description">Descrizione</a></th>
-			<th><a href="Product?sort=price">Prezzo</a></th>
+			<th><a href="Product?sort=id">Codice</a></th>
+			<th><a href="Product?sort=nome">Nome</a></th>
+			<th><a href="Product?sort=descrizione">Descrizione</a></th>
+			<th><a href="Product?sort=prezzo">Prezzo</a></th>
 			<th>Azione</th>
 		</tr>
 		<%
@@ -37,13 +41,15 @@
 					GeneralProductBean bean = (GeneralProductBean) it.next();
 		%>
 		<tr>
+			<td><%=bean.getId()%></td>
 			<td><%=bean.getNome()%></td>
 			<td><%=bean.getDescrizione()%></td>
 			<td><%=bean.getPrezzo()%></td>
 
 			<td><a href="Product?action=delete&id=<%=bean.getId()%>">Elimina</a><br>
-				<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a></td>
-		</tr>
+				<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a><br>
+				<a href="Product?action=addcart&id=<%=bean.getId()%>">Aggiungi al Carrello</a></td>
+ 		</tr>
 		<%
 				}
 			} else {
@@ -56,35 +62,6 @@
 		%>
 	</table>
 	
-	<h2>Dettagli</h2>
-	<%
-		if (product != null) {
-	%>
-	<table border="1">
-		<tr>
-			<th>Id</th>
-			<th>Nome</th>
-			<th>Descrizione</th>
-			<th>Prezzo</th>
-			<th>Quantità</th>
-			<th>Iva</th>
-			<th>Disponibilità</th>
-		</tr>
-		<tr>
-			<td><%=product.getId()%></td>
-			<td><%=product.getNome()%></td>
-			<td><%=product.getDescrizione()%></td>
-			<td><%=product.getPrezzo()%></td>
-			<td><%=product.getQuantitaDisponibile()%></td>
-			<td><%=product.getIva()%></td>
-			<td><% if(product.isDisponibilita() == true)
-			{%>Si<%}
-				else{%>no<%}%></td>
-		</tr>
-	</table>
-	<%
-		}
-	%>
 	<h2>Inserisci</h2>
 	<form action="Product" method="post">
 		<input type="hidden" name="action" value="insert"> 

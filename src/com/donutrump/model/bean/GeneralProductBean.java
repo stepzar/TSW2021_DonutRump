@@ -4,8 +4,6 @@ package com.donutrump.model.bean;
 //import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
-
-
 public class GeneralProductBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
