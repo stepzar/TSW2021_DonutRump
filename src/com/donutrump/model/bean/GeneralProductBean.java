@@ -4,6 +4,7 @@ package com.donutrump.model.bean;
 //import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+
 public class GeneralProductBean implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -14,9 +15,10 @@ public class GeneralProductBean implements Serializable{
 		this.quantitaDisponibile = 0; 
 		this.prezzo= 0; 
 		this.iva = 22; 
-		this.disponibilita= false; 
-		this.descrizione= ""; 
+		this.disponibilita = false; 
+		this.descrizione = ""; 
 	}
+	
 	
 	public int getId() {
 		return id;
@@ -33,27 +35,45 @@ public class GeneralProductBean implements Serializable{
 	public int getQuantitaDisponibile() {
 		return quantitaDisponibile;
 	}
-	public void setQuantitaDisponibile(int quantitaDisponibile) {
-		this.quantitaDisponibile = quantitaDisponibile;
+	
+	public boolean setQuantitaDisponibile(int quantitaDisponibile) {
+		if (quantitaDisponibile < 0) return false; 
+		else if (quantitaDisponibile == 0) {
+			this.quantitaDisponibile = quantitaDisponibile;
+			this.disponibilita=false; 
+			return true;
+			}
+		else {
+			this.quantitaDisponibile = quantitaDisponibile;
+			return true;
+		}
 	}
+	
 	public double getPrezzo() {
 		return prezzo;
 	}
-	public void setPrezzo(double prezzo) {
-		this.prezzo = prezzo;
+	public boolean setPrezzo(double prezzo) {
+		if (prezzo < 0) return false; 
+		else {
+			this.prezzo = prezzo;
+			return true;
+		}
 	}
 	public double getIva() {
 		return iva;
 	}
-	public void setIva(double iva) {
-		this.iva = iva;
+	
+	public boolean setIva(double iva) {
+		if (iva < 0) return false; 
+		else {
+			this.iva = iva;
+			return true;
+		}
 	}
 	public boolean isDisponibilita() {
 		return disponibilita;
 	}
-	public void setDisponibilita(boolean disponibilita) {
-		this.disponibilita = disponibilita;
-	}
+	
 	public String getDescrizione() {
 		return descrizione;
 	}
@@ -61,6 +81,14 @@ public class GeneralProductBean implements Serializable{
 		this.descrizione = descrizione;
 	}
 	
+	public int getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(int categoria) {
+		this.categoria = categoria;
+	} 
+
 	@Override
 	//ritorna il bean in forma di Stringa
 	public String toString() {
@@ -69,6 +97,8 @@ public class GeneralProductBean implements Serializable{
 		else disp = "non disponibile"; 
 		return nome + " (" + id + "), " + prezzo + " " + quantitaDisponibile + ". " + descrizione + " IVA: "+ this.iva + "% "+ disp;
 	}
+
+	
 
 	//VARIABILI D'ISTANZA: 
 	private int id; 
@@ -80,6 +110,6 @@ public class GeneralProductBean implements Serializable{
 	private String descrizione; 
 	
   // private BufferedImage immagine; 
-	private int categoria; 
+	private int categoria;   //La cattegoria momentaneamente non la trattiamo, sarà impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
 
 }

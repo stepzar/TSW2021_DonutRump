@@ -13,9 +13,11 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.donutrump.model.bean.GeneralProductBean;
+import com.donutrump.model.bean.InstanceProductBean;
+import com.donutrump.model.bean.OrderBean;
 
 
-public class GeneralProductDAO {
+public class InstanceProductDAO {
 	
 	private static DataSource ds; 
 
@@ -31,37 +33,28 @@ public class GeneralProductDAO {
 	}
 	}
 
-	private static final String TABLE_NAME = "prodottogenerico"; 
+	private static final String TABLE_NAME = "istanzaprodotto"; 
 	
-	public synchronized void doSave (GeneralProductBean product) throws SQLException {  
+	public synchronized void doSave (InstanceProductBean product) throws SQLException {  
 
 	Connection connection = null;
 	PreparedStatement preparedStatement = null; 
 
 	
 	String insertSQL = "INSERT INTO " + TABLE_NAME
-	+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";  
+	+ " VALUES (?, ?, ?, ?, ?)";  
 
 	try {
 	connection = ds.getConnection(); 
 	preparedStatement = connection.prepareStatement(insertSQL);
-	preparedStatement.setInt(1, product.getId());
-	preparedStatement.setString(2, product.getNome());
-	preparedStatement.setInt(3, product.getQuantitaDisponibile());
-	preparedStatement.setDouble(4, product.getPrezzo());
-	preparedStatement.setDouble(5, product.getIva());
-	preparedStatement.setBoolean(6, product.isDisponibilita());
-	preparedStatement.setString(7, product.getDescrizione());
+	preparedStatement.setDouble(1, product.getId());
+	preparedStatement.setDouble(2, product.getIvaAcquisto());
+	preparedStatement.setDouble(3, product.getPrezzoAcquisto());
+	preparedStatement.setInt(4, product.getProdottoGenerico().getId());
+	preparedStatement.setInt(5, product.getOrdine().getId()); // momentaneamente metto ordine id= 1
 	
-	//immagine
-	preparedStatement.setNull(8, java.sql.Types.BLOB);
-	
-	// momentaneamente metto categoria uguale a 1
-	preparedStatement.setInt(9, 1);
-
 	preparedStatement.executeUpdate(); 
 
-	//connection.commit();
 	}
 
 	finally {
@@ -80,28 +73,38 @@ public class GeneralProductDAO {
 
 	}
 
-	public synchronized GeneralProductBean doRetrieveByKey(int code) throws SQLException {
+	public synchronized InstanceProductBean doRetrieveByKey(int id) throws SQLException {
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
+	
+	InstanceProductBean bean = new InstanceProductBean();
 
-	GeneralProductBean bean = new GeneralProductBean();
-
-	String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
-
+	String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?"; 
+					
 	try {
 	connection = ds.getConnection();
 	preparedStatement = connection.prepareStatement(selectSQL);
-	preparedStatement.setInt(1, code);
+	preparedStatement.setInt(1, id);
 
 	ResultSet rs = preparedStatement.executeQuery();
 
-	while (rs.next()) { 				
-	bean.setId(rs.getInt("id"));
-	bean.setNome(rs.getString("nome"));
-	bean.setDescrizione(rs.getString("descrizione"));
-	bean.setPrezzo(rs.getInt("prezzo"));
-	bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
-	bean.setIva(rs.getDouble("iva"));
+	while (rs.next()) {
+	bean.setId(rs.getInt("id"));	
+	bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
+	bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
+	
+	GeneralProductBean gp = new GeneralProductBean(); 
+	gp.setId(rs.getInt("prodottoGenerico"));
+	GeneralProductDAO gpModel = new GeneralProductDAO ();
+	gp = gpModel.doRetrieveByKey(gp.getId());
+	bean.setProdottoGenerico(gp);
+	
+	OrderBean ord = new OrderBean();
+	ord.setId(rs.getInt("idOrdine"));
+	//OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrà come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
+	//ord = ordModel.doRetriveByKey(ord.getId()); 
+	bean.setOrdine(ord);
+	
 	}
 
 	} finally {
@@ -117,18 +120,18 @@ public class GeneralProductDAO {
 	}
 
 	
-	public synchronized boolean doDelete(int code) throws SQLException {
+	public synchronized boolean doDelete(int id) throws SQLException {
 	Connection connection = null;
 	PreparedStatement preparedStatement = null;
 
 	int result = 0;
 
-	String deleteSQL = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+	String deleteSQL = "DELETE * FROM " + TABLE_NAME + "where id = ?"; 
 
 	try {
 	connection = ds.getConnection();
 	preparedStatement = connection.prepareStatement(deleteSQL);
-	preparedStatement.setInt(1, code);
+	preparedStatement.setInt(1, id);
 
 	result = preparedStatement.executeUpdate();
 
@@ -146,11 +149,11 @@ public class GeneralProductDAO {
 
 
 
-	public synchronized Collection<GeneralProductBean> doRetrieveAll(String order) throws SQLException {
+	public synchronized Collection<InstanceProductBean> doRetrieveAll(String order) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 	
-		Collection<GeneralProductBean> products = new LinkedList<GeneralProductBean>();
+		Collection<InstanceProductBean> products = new LinkedList<InstanceProductBean>();
 	
 		String selectSQL = "SELECT * FROM " + TABLE_NAME;
 	
@@ -165,14 +168,24 @@ public class GeneralProductDAO {
 			ResultSet rs = preparedStatement.executeQuery();
 		
 			while (rs.next()) {                                     
-				GeneralProductBean bean = new GeneralProductBean();
-			
+				InstanceProductBean bean = new InstanceProductBean();
+				
 				bean.setId(rs.getInt("id"));
-				bean.setNome(rs.getString("nome"));
-				bean.setDescrizione(rs.getString("descrizione"));
-				bean.setPrezzo(rs.getInt("prezzo"));
-				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
-				bean.setIva(rs.getDouble("iva"));
+				bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
+				bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
+				
+				GeneralProductBean gp = new GeneralProductBean(); 
+				gp.setId(rs.getInt("prodottoGenerico"));
+				GeneralProductDAO gpModel = new GeneralProductDAO ();
+				gp = gpModel.doRetrieveByKey(gp.getId());
+				bean.setProdottoGenerico(gp);
+				
+				OrderBean ord = new OrderBean();
+				ord.setId(rs.getInt("idOrdine"));
+				//OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrà come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
+				//ord = ordModel.doRetriveByKey(ord.getId()); 
+				bean.setOrdine(ord);
+				
 				products.add(bean);
 			}
 		} 
@@ -190,4 +203,3 @@ public class GeneralProductDAO {
 	}
 
 }
-

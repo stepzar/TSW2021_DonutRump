@@ -1,3 +1,5 @@
+                          <!-- Questa pagina gestisce i dettagli di ProdottoGenerico -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
  
@@ -38,12 +40,14 @@
 				<td><%=product.getIva()%></td>
 				<td><% if(product.isDisponibilita() == true)
 				{%>Si<%}
-					else{%>no<%}%></td>
+					else{%>No<%}%></td>
 				<td><a href="Product?action=addcart&id=<%=product.getId()%>">Aggiungi al Carrello</a>
 			</tr>
 		</table>
 		<%
-			}
-		%>
+			} 
+			else { %>
+			<h3>ERRORE: Dettagli non disponibili</h3>
+	<% }%>
 	</body>
 </html>

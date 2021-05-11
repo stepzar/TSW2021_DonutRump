@@ -1,29 +1,32 @@
+/**************************Cart è l'insieme di "General prodotto" che caratterizza il carrello************************/
+
 package com.donutrump.model.bean;
 
 import java.util.ArrayList;
 
 public class Cart {
 
-	private ArrayList<InstanceProductBean> products;
-	
 	public Cart() {
-		products = new ArrayList<InstanceProductBean>();
+		products = new ArrayList<GeneralProductBean>();
 	}
 	
-	public void addProduct(InstanceProductBean product) {
+	public void addProduct(GeneralProductBean product) {
 		products.add(product);
 	}
 	
-	public void deleteProduct(InstanceProductBean product) {
-		for(InstanceProductBean item : products) {
-			if(item.getGeneralProduct().getId() == product.getGeneralProduct().getId()) {
+	public void deleteProduct(GeneralProductBean product) {
+		for(GeneralProductBean item : products) {
+			if(item.getId() == product.getId()) {
 				products.remove(item);
 				break;
 			}
 		}
  	}
 	
-	public ArrayList<InstanceProductBean> getProducts() {
+	public ArrayList<GeneralProductBean> getProducts() {
 		return  products;
 	}
+	
+		
+	private ArrayList<GeneralProductBean> products;
 }

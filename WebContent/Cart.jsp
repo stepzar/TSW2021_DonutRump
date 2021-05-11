@@ -7,7 +7,7 @@
 
 <!DOCTYPE html>
 <html>
-<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*"%>
+<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*, java.util.LinkedHashMap;"%>
 	<head>
 		<meta charset=UTF-8>
 		<title>Carrello</title>
@@ -23,23 +23,35 @@
 			</tr>
 			<%
 				if (cart != null && cart.getProducts().size() != 0) {
-					ArrayList<InstanceProductBean> carrello = cart.getProducts();
-					for(InstanceProductBean bean : carrello){
+					ArrayList<GeneralProductBean> carrello = cart.getProducts();
+					Map<GeneralProductBean, Integer> filterCarrello = new LinkedHashMap<GeneralProductBean, Integer>();
+
+					for(GeneralProductBean bean : carrello){
 						int quantita = 0;
-						for(InstanceProductBean bean2: carrello){
-							if(bean.getGeneralProduct().getId() == bean2.getGeneralProduct().getId()){
-								quantita ++;
-							}
+						filterCarrello.put(bean, quantita); 
+						
+						for(GeneralProductBean bean2: carrello){
+                             if(bean.getId() == bean2.getId()) {
+                            	 quantita ++;
+                            	 filterCarrello.put(bean2, quantita); 
+                             }
 						}
+					
+					}		
+					
+					for (Map.Entry<GeneralProductBean, Integer> entry : filterCarrello.entrySet()){
+						GeneralProductBean bean = entry.getKey(); 
+						Integer quantita = entry.getValue(); 
+					
 			%>
 			<tr>
-				<td><%=bean.getGeneralProduct().getNome()%></td>
-				<td><%=bean.getGeneralProduct().getPrezzo()%></td>
+				<td><%=bean.getNome() %></td>
+				<td><%=bean.getPrezzo()%></td>
 				<td><%=quantita%></td>
 				<td><%=bean.getIva()%></td>
 			
 			<%}} else{%> 
-				Il carrello è vuoto
+				<td colspan="6"> Il carrello è vuoto </td>
 			<%} %>
 			</tr>
 		</table>

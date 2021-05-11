@@ -2,17 +2,18 @@
 	pageEncoding="UTF-8"%>
 
 <%
-	Collection<?> products = (Collection<?>) request.getAttribute("products");
-	if(products == null) {
+	Collection<?> products = (Collection<?>) request.getAttribute("catalog");
+    if(products == null) {
 		response.sendRedirect("./Product");	
 		return;
 	}
+    
 	GeneralProductBean product = (GeneralProductBean) request.getAttribute("product");
 %>
 
 <!DOCTYPE html>
 <html>
-<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.GeneralProductBean"%>
+<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*, com.donutrump.model.bean.InstanceProductBean" %>
 
 
 <head>
@@ -22,9 +23,9 @@
 </head>
 
 <body>
-	<h2><a href="Product?action=readcart">Carrello</a></h2>
+	<h1 >[CATALOGO]</h1>
+	<h2><a href="Product?action=cart">Carrello</a></h2>
 
-	<h2>Prodotti</h2>
 	<a href="Product">List</a>
 	<table border="1">
 		<tr>
@@ -46,16 +47,17 @@
 			<td><%=bean.getDescrizione()%></td>
 			<td><%=bean.getPrezzo()%></td>
 
-			<td><a href="Product?action=delete&id=<%=bean.getId()%>">Elimina</a><br>
+			<td><a href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br>
 				<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a><br>
-				<a href="Product?action=addcart&id=<%=bean.getId()%>">Aggiungi al Carrello</a></td>
+				<a href="Product?action=addcart&id=<%=bean.getId()%>">Aggiungi al Carrello</a></td> 
  		</tr>
+ 		
 		<%
 				}
 			} else {
 		%>
 		<tr>
-			<td colspan="6">Nessun prodotto disponibile</td>
+			<td colspan="6">Nessun prodotto disponibile nel catalogo</td>
 		</tr>
 		<%
 			}

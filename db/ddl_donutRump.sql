@@ -67,12 +67,12 @@ create table metodoPagamento
 );
 
 create table istanzaProdotto(
-    ivaAcquisto double precision,
-    prezzoAcquisto double precision,
+    id bigint auto_increment primary key,
+	ivaAcquisto double precision not null,
+    prezzoAcquisto double precision not null,
     prodottoGenerico int,
     idOrdine bigint,
     
-    primary key (ivaAcquisto, prezzoAcquisto, prodottoGenerico),
     foreign key (prodottoGenerico) references prodottoGenerico(id) on update cascade on delete cascade,
     foreign key (idOrdine) references ordine(id) on update cascade on delete set null
     );

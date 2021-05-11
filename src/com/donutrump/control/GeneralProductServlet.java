@@ -3,6 +3,7 @@ package com.donutrump.control;
 import java.io.IOException;
 import java.sql.SQLException;
 
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,7 +25,7 @@ public class GeneralProductServlet extends HttpServlet{
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
 		String action = request.getParameter("action");
 		
 		Cart cart = (Cart)request.getSession().getAttribute("cart");
@@ -36,6 +37,23 @@ public class GeneralProductServlet extends HttpServlet{
 		try {
 			
 			if (action != null) {
+				
+				//CARRELLO
+				if (action.equalsIgnoreCase("cart")){
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					dispatcher.forward(request, response);
+				} 
+				else if (action.equalsIgnoreCase("addcart")){
+					int id = Integer.parseInt(request.getParameter("id"));
+					
+					// aggiungi al carrello
+					GeneralProductBean gp = model.doRetrieveByKey(id);
+					cart.addProduct(gp);
+				}
+				
+				
+				//CATALOGO
 				if (action.equalsIgnoreCase("read")){
 					int id = Integer.parseInt(request.getParameter("id"));
 					request.removeAttribute("product");
@@ -63,26 +81,10 @@ public class GeneralProductServlet extends HttpServlet{
 					bean.setPrezzo(price);
 					bean.setQuantitaDisponibile(quantity);
 					bean.setIva(iva);
-					
-					if(quantity > 0){
-						bean.setDisponibilita(true);
-					}
-					else{
-						bean.setDisponibilita(false);
-					}
 						
 					model.doSave(bean);
 				}
-				else if (action.equals("addcart")){
-					int id = Integer.parseInt(request.getParameter("id"));
-					
-					// aggiungi al carrello
-					cart.addProduct(model.doRetrieveByKey(id));
-				}
-				else if (action.equals("readcart")) {
-					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
-					dispatcher.forward(request, response);
-				}
+				
 			}
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
@@ -92,9 +94,8 @@ public class GeneralProductServlet extends HttpServlet{
 		
 		
 		try {
-			System.out.println("servlet");
-			request.removeAttribute("products");
-			request.setAttribute("products", model.doRetrieveAll(sort));
+			request.removeAttribute("catalog");
+			request.setAttribute("catalog", model.doRetrieveAll(sort));
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
 		}
