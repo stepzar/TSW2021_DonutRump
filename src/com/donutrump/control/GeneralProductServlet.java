@@ -3,7 +3,6 @@ package com.donutrump.control;
 import java.io.IOException;
 import java.sql.SQLException;
 
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +26,7 @@ public class GeneralProductServlet extends HttpServlet{
 			throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
+		String quantita = request.getParameter("quantita");
 		
 		Cart cart = (Cart)request.getSession().getAttribute("cart");
 		if(cart == null) {
@@ -43,6 +43,7 @@ public class GeneralProductServlet extends HttpServlet{
 					
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
 					dispatcher.forward(request, response);
+					
 				} 
 				else if (action.equalsIgnoreCase("addcart")){
 					int id = Integer.parseInt(request.getParameter("id"));
@@ -86,6 +87,7 @@ public class GeneralProductServlet extends HttpServlet{
 				}
 				
 			}
+			
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
 		}

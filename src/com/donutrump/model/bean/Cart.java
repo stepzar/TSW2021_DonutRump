@@ -1,4 +1,4 @@
-/**************************Cart è l'insieme di "General prodotto" che caratterizza il carrello************************/
+/**************************Cart ï¿½ l'insieme di "General prodotto" che caratterizza il carrello************************/
 
 package com.donutrump.model.bean;
 
@@ -12,6 +12,7 @@ public class Cart {
 	
 	public void addProduct(GeneralProductBean product) {
 		products.add(product);
+		// controlliamo se giÃ  esiste e nel caso aumentiamo la quantita
 	}
 	
 	public void deleteProduct(GeneralProductBean product) {

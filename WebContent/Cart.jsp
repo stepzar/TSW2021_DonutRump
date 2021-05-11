@@ -7,7 +7,7 @@
 
 <!DOCTYPE html>
 <html>
-<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*, java.util.LinkedHashMap;"%>
+<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*"%>
 	<head>
 		<meta charset=UTF-8>
 		<title>Carrello</title>
@@ -18,42 +18,36 @@
 			<tr>
 				<th>Nome</th>
 				<th>Prezzo</th>
-				<th>Quantità</th>
 				<th>Iva</th>
+				<th>Quantità</th>
 			</tr>
-			<%
-				if (cart != null && cart.getProducts().size() != 0) {
+			<%	if (cart != null && cart.getProducts().size() != 0) {
 					ArrayList<GeneralProductBean> carrello = cart.getProducts();
-					Map<GeneralProductBean, Integer> filterCarrello = new LinkedHashMap<GeneralProductBean, Integer>();
-
-					for(GeneralProductBean bean : carrello){
+					ArrayList<Integer> visited = new ArrayList<Integer>();
+					
+					for(GeneralProductBean bean: carrello){
 						int quantita = 0;
-						filterCarrello.put(bean, quantita); 
-						
 						for(GeneralProductBean bean2: carrello){
-                             if(bean.getId() == bean2.getId()) {
-                            	 quantita ++;
-                            	 filterCarrello.put(bean2, quantita); 
-                             }
+							if(bean.getId() == bean2.getId()){
+								quantita++;
+							}
 						}
-					
-					}		
-					
-					for (Map.Entry<GeneralProductBean, Integer> entry : filterCarrello.entrySet()){
-						GeneralProductBean bean = entry.getKey(); 
-						Integer quantita = entry.getValue(); 
-					
+						if(!visited.contains(bean.getId())){
+							visited.add(bean.getId());
 			%>
 			<tr>
-				<td><%=bean.getNome() %></td>
+				<td><%=bean.getNome()%></td>
 				<td><%=bean.getPrezzo()%></td>
-				<td><%=quantita%></td>
 				<td><%=bean.getIva()%></td>
+				<form action="Product" method="get">
+					<input type="hidden" name="quantita" value="aggiorna"> 
+					<td><input type="number" min="1" max="<%=bean.getQuantitaDisponibile()%>" value="<%=quantita%>"></td>
+				</form>
 			
-			<%}} else{%> 
-				<td colspan="6"> Il carrello è vuoto </td>
-			<%} %>
-			</tr>
+			<%}}} else{%> 
+				<td colspan="6"> Il carrello è vuoto</td>
+			<%} %>			</tr>
+
 		</table>
 	</body>
 </html>
