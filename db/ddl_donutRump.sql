@@ -13,14 +13,13 @@ create table utente (
 	); 
 
 create table indirizzo (
-	id bigint auto_increment,
+	id bigint auto_increment primary key,
     idUtente bigint, 
     cap char (5) not null,
     nCivico int  not null,
     via varchar (45) not null,
 	provincia char (2) not null,
     citta varchar (45) not null,
-	primary key (id, idUtente),
 	foreign key (idUtente) references utente(id) on update cascade on delete cascade
 	); 
     
