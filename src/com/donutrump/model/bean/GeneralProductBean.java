@@ -98,8 +98,6 @@ public class GeneralProductBean implements Serializable{
 		return nome + " (" + id + "), " + prezzo + " " + quantitaDisponibile + ". " + descrizione + " IVA: "+ this.iva + "% "+ disp;
 	}
 
-	
-
 	//VARIABILI D'ISTANZA: 
 	private int id; 
 	private String nome; 
@@ -110,6 +108,6 @@ public class GeneralProductBean implements Serializable{
 	private String descrizione; 
 	
   // private BufferedImage immagine; 
-	private int categoria;   //La cattegoria momentaneamente non la trattiamo, sarà impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
+	private int categoria;   //La cattegoria momentaneamente non la trattiamo, sarï¿½ impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
 
 }

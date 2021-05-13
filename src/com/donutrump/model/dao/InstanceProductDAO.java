@@ -18,188 +18,182 @@ import com.donutrump.model.bean.OrderBean;
 
 
 public class InstanceProductDAO {
-	
-	private static DataSource ds; 
 
-	static {
-	try {
-	Context initCtx = new InitialContext();
-	Context envCtx = (Context) initCtx.lookup("java:comp/env");
-	ds = (DataSource) envCtx.lookup("jdbc/TSW2021_DonutRump");
-	
+    private static DataSource ds;
 
-	} catch (NamingException e) {
-	System.out.println("Error:" + e.getMessage());
-	}
-	}
+    static {
+        try {
+            Context initCtx = new InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            ds = (DataSource) envCtx.lookup("jdbc/TSW2021_DonutRump");
 
-	private static final String TABLE_NAME = "istanzaprodotto"; 
-	
-	public synchronized void doSave (InstanceProductBean product) throws SQLException {  
 
-	Connection connection = null;
-	PreparedStatement preparedStatement = null; 
+        } catch (NamingException e) {
+            System.out.println("Error:" + e.getMessage());
+        }
+    }
 
-	
-	String insertSQL = "INSERT INTO " + TABLE_NAME
-	+ " VALUES (?, ?, ?, ?, ?)";  
+    private static final String TABLE_NAME = "istanzaprodotto";
 
-	try {
-	connection = ds.getConnection(); 
-	preparedStatement = connection.prepareStatement(insertSQL);
-	preparedStatement.setDouble(1, product.getId());
-	preparedStatement.setDouble(2, product.getIvaAcquisto());
-	preparedStatement.setDouble(3, product.getPrezzoAcquisto());
-	preparedStatement.setInt(4, product.getProdottoGenerico().getId());
-	preparedStatement.setInt(5, product.getOrdine().getId()); // momentaneamente metto ordine id= 1
-	
-	preparedStatement.executeUpdate(); 
+    public synchronized void doSave(InstanceProductBean product) throws SQLException {
 
-	}
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-	finally {
-		try {
-			if (preparedStatement != null)
-				preparedStatement.close();
-		} 
-		
-		finally {
-			if (connection != null)
-				connection.close();
-		}
-	}
+
+        String insertSQL = "INSERT INTO " + TABLE_NAME +
+            " VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(insertSQL);
+            preparedStatement.setDouble(1, product.getId());
+            preparedStatement.setDouble(2, product.getIvaAcquisto());
+            preparedStatement.setDouble(3, product.getPrezzoAcquisto());
+            preparedStatement.setInt(4, product.getProdottoGenerico().getId());
+            preparedStatement.setInt(5, product.getOrdine().getId()); // momentaneamente metto ordine id= 1
+
+            preparedStatement.executeUpdate();
+
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
 
 
 
-	}
+    }
 
-	public synchronized InstanceProductBean doRetrieveByKey(int id) throws SQLException {
-	Connection connection = null;
-	PreparedStatement preparedStatement = null;
-	
-	InstanceProductBean bean = new InstanceProductBean();
+    public synchronized InstanceProductBean doRetrieveByKey(int id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-	String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?"; 
-					
-	try {
-	connection = ds.getConnection();
-	preparedStatement = connection.prepareStatement(selectSQL);
-	preparedStatement.setInt(1, id);
+        InstanceProductBean bean = new InstanceProductBean();
 
-	ResultSet rs = preparedStatement.executeQuery();
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?";
 
-	while (rs.next()) {
-	bean.setId(rs.getInt("id"));	
-	bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
-	bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
-	
-	GeneralProductBean gp = new GeneralProductBean(); 
-	gp.setId(rs.getInt("prodottoGenerico"));
-	GeneralProductDAO gpModel = new GeneralProductDAO ();
-	gp = gpModel.doRetrieveByKey(gp.getId());
-	bean.setProdottoGenerico(gp);
-	
-	OrderBean ord = new OrderBean();
-	ord.setId(rs.getInt("idOrdine"));
-	//OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrà come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
-	//ord = ordModel.doRetriveByKey(ord.getId()); 
-	bean.setOrdine(ord);
-	
-	}
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, id);
 
-	} finally {
-	try {
-	if (preparedStatement != null)
-	preparedStatement.close();
-	} finally {
-	if (connection != null)
-	connection.close();
-	}
-	}
-	return bean;
-	}
+            ResultSet rs = preparedStatement.executeQuery();
 
-	
-	public synchronized boolean doDelete(int id) throws SQLException {
-	Connection connection = null;
-	PreparedStatement preparedStatement = null;
+            while (rs.next()) {
+                bean.setId(rs.getInt("id"));
+                bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
+                bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
 
-	int result = 0;
+                GeneralProductBean gp = new GeneralProductBean();
+                gp.setId(rs.getInt("prodottoGenerico"));
+                GeneralProductDAO gpModel = new GeneralProductDAO();
+                gp = gpModel.doRetrieveByKey(gp.getId());
+                bean.setProdottoGenerico(gp);
 
-	String deleteSQL = "DELETE * FROM " + TABLE_NAME + "where id = ?"; 
+                OrderBean ord = new OrderBean();
+                ord.setId(rs.getInt("idOrdine"));
+                //OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrï¿½ come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
+                //ord = ordModel.doRetriveByKey(ord.getId()); 
+                bean.setOrdine(ord);
 
-	try {
-	connection = ds.getConnection();
-	preparedStatement = connection.prepareStatement(deleteSQL);
-	preparedStatement.setInt(1, id);
+            }
 
-	result = preparedStatement.executeUpdate();
-
-	} finally {
-	try {
-	if (preparedStatement != null)
-	preparedStatement.close();
-	} finally {
-	if (connection != null)
-	connection.close();
-	}
-	}
-	return (result != 0);
-	}
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return bean;
+    }
 
 
+    public synchronized boolean doDelete(int id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-	public synchronized Collection<InstanceProductBean> doRetrieveAll(String order) throws SQLException {
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-	
-		Collection<InstanceProductBean> products = new LinkedList<InstanceProductBean>();
-	
-		String selectSQL = "SELECT * FROM " + TABLE_NAME;
-	
-		if (order != null && !order.equals("")) { 
-			selectSQL += " ORDER BY " + order; 
-		}
-	
-		try {
-			connection = ds.getConnection();
-			preparedStatement = connection.prepareStatement(selectSQL);
-		
-			ResultSet rs = preparedStatement.executeQuery();
-		
-			while (rs.next()) {                                     
-				InstanceProductBean bean = new InstanceProductBean();
-				
-				bean.setId(rs.getInt("id"));
-				bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
-				bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
-				
-				GeneralProductBean gp = new GeneralProductBean(); 
-				gp.setId(rs.getInt("prodottoGenerico"));
-				GeneralProductDAO gpModel = new GeneralProductDAO ();
-				gp = gpModel.doRetrieveByKey(gp.getId());
-				bean.setProdottoGenerico(gp);
-				
-				OrderBean ord = new OrderBean();
-				ord.setId(rs.getInt("idOrdine"));
-				//OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrà come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
-				//ord = ordModel.doRetriveByKey(ord.getId()); 
-				bean.setOrdine(ord);
-				
-				products.add(bean);
-			}
-		} 
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-			}
-			finally {
-				if (connection != null)
-					connection.close();
-			}
-		}
-		return products;
-	}
+        int result = 0;
+
+        String deleteSQL = "DELETE * FROM " + TABLE_NAME + "where id = ?";
+
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(deleteSQL);
+            preparedStatement.setInt(1, id);
+
+            result = preparedStatement.executeUpdate();
+
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return (result != 0);
+    }
+
+
+
+    public synchronized Collection < InstanceProductBean > doRetrieveAll(String order) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        Collection < InstanceProductBean > products = new LinkedList < InstanceProductBean > ();
+
+        String selectSQL = "SELECT * FROM " + TABLE_NAME;
+
+        if (order != null && !order.equals("")) {
+            selectSQL += " ORDER BY " + order;
+        }
+
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                InstanceProductBean bean = new InstanceProductBean();
+
+                bean.setId(rs.getInt("id"));
+                bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
+                bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
+
+                GeneralProductBean gp = new GeneralProductBean();
+                gp.setId(rs.getInt("prodottoGenerico"));
+                GeneralProductDAO gpModel = new GeneralProductDAO();
+                gp = gpModel.doRetrieveByKey(gp.getId());
+                bean.setProdottoGenerico(gp);
+
+                OrderBean ord = new OrderBean();
+                ord.setId(rs.getInt("idOrdine"));
+                //OrderDAO ordModel = new OrderDAO (); // momentaneamente ordine avrï¿½ come  id= 1, deve essere ancora implementato bene (sia Bean che DAO)
+                //ord = ordModel.doRetriveByKey(ord.getId()); 
+                bean.setOrdine(ord);
+
+                products.add(bean);
+            }
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return products;
+    }
 
 }
