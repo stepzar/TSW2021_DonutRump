@@ -63,9 +63,9 @@
 			}
 		%>
 	</table>
-	
+	 
 	<h2>Inserisci</h2>
-	<form action="Product" method="post">
+	<form action="Product" method="get">
 		<input type="hidden" name="action" value="insert"> 
 		
 		<label for="name">Nome:</label><br> 

@@ -1,4 +1,4 @@
-/**************************Cart ï¿½ l'insieme di "General prodotto" che caratterizza il carrello************************/
+/**************************Cart è l'insieme di "General prodotto" che caratterizza il carrello************************/
 
 package com.donutrump.model.bean;
 
@@ -19,10 +19,32 @@ public class Cart {
 		for(GeneralProductBean item : products) {
 			if(item.getId() == product.getId()) {
 				products.remove(item);
-				break;
+				break; 
 			}
 		}
  	}
+	
+	//Rimuove un prodotto dal carrello indipendentemente dalla quantità
+	public void deleteAllProduct(GeneralProductBean product) {
+		for(GeneralProductBean item : products) {
+			if(item.getId() == product.getId()) {
+				products.remove(item);
+			}
+		}
+ 	}
+	
+	public boolean isPresent (GeneralProductBean product) {
+		boolean flag = false; 
+		for(GeneralProductBean item : products) {
+			if(item.getId() == product.getId()) {
+				flag = true;
+				break; 
+			}
+		}
+		return flag; 
+	}
+	
+	
 	
 	public ArrayList<GeneralProductBean> getProducts() {
 		return  products;

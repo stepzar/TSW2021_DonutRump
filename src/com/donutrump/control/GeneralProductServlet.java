@@ -26,25 +26,61 @@ public class GeneralProductServlet extends HttpServlet{
 			throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
-		String quantita = request.getParameter("quantita");
 		
+		String cancellaDalCarrello = request.getParameter("deleteFromCart");
+	   
+		String quantitaS = request.getParameter("quantity");
+	    int quantita = 0; 
+	    if (quantitaS!=null) {
+	    	quantita = Integer.parseInt(quantitaS);
+	    	}
+	   
 		Cart cart = (Cart)request.getSession().getAttribute("cart");
 		if(cart == null) {
 			cart = new Cart();
 			request.getSession().setAttribute("cart", cart);
 		}
 		
+		
 		try {
+			
+			
+			
 			
 			if (action != null) {
 				
 				//CARRELLO
+				//modifica quantità dei prodotti
+				if (quantita != 0 && action.equalsIgnoreCase("cart")) {
+						
+					int id = Integer.parseInt(request.getParameter("id"));
+					int quantitaVecchia = Integer.parseInt(request.getParameter("oldQuantity"));
+					if (quantita >= quantitaVecchia) {
+						for (int i=quantitaVecchia; i<quantita; i++) cart.addProduct(model.doRetrieveByKey(id));
+					}
+					else {
+						for (int i=quantita; i<quantitaVecchia; i++) cart.deleteProduct(model.doRetrieveByKey(id));
+					}
+				}
+				
+				
 				if (action.equalsIgnoreCase("cart")){
 					
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
 					dispatcher.forward(request, response);
 					
+					if (cancellaDalCarrello.equalsIgnoreCase("true")) { //cancella il prodotto dal carrello, indipendentemente dalle quantità
+						//cancella dal carrello leggendo l'id
+						int id = Integer.parseInt(request.getParameter("id"));
+						int quantitaDaCancellare = Integer.parseInt(request.getParameter("oldQuantity"));
+						for (int i=0; i<quantitaDaCancellare; i++) cart.deleteProduct(model.doRetrieveByKey(id));
+						
+						return; //Il return ci riporta immmediatamente al punto della jsp deov'eravamo prima, e quest'ultima andrà ad eseguire il sendRedirect 
+					}
+					
+						
 				} 
+				
 				else if (action.equalsIgnoreCase("addcart")){
 					int id = Integer.parseInt(request.getParameter("id"));
 					
@@ -63,10 +99,26 @@ public class GeneralProductServlet extends HttpServlet{
 					dispatcher.forward(request, response);
 				} 
 				
-				else if (action.equalsIgnoreCase("delete")){
+				else if (action.equalsIgnoreCase("delete")){  //Prima di eliminarlo dal DB, noi dobbiamo eliminarlo dal carrello (se ovviamente c'è)
+					
 					int id = Integer.parseInt(request.getParameter("id"));
+					
+					// vedo se c'è nel carrello
+					boolean presente = cart.isPresent(model.doRetrieveByKey(id));
+					System.out.println(presente); //debug
+					
+					//elimino dal DB
 					model.doDelete(id);
+					
+					// elimino dal carrello carrello
+					if (presente==true) {
+						cart.deleteAllProduct(model.doRetrieveByKey(id));
+						request.getSession().removeAttribute("cart");
+						request.getSession().setAttribute("cart", cart);
+						
+					}
 				} 
+				
 				else if (action.equalsIgnoreCase("insert")){
 					
 					String name = request.getParameter("name");
@@ -111,7 +163,7 @@ public class GeneralProductServlet extends HttpServlet{
 	{
 		doGet(request, response);
 	}
-
+	
 	
 }
 

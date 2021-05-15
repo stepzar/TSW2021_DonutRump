@@ -16,7 +16,8 @@
 	</head>
 	
 	<body>
-		<h2>Dettagli</h2>
+		<h1>[DETTAGLI]</h1>
+		<h2><a href="Product?catalog">Torna al catalogo</a></h2>
 		<%
 			if (product != null) {
 		%>
