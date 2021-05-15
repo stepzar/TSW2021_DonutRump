@@ -13,6 +13,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.donutrump.model.bean.PaymentMethodBean;
+import com.donutrump.model.bean.UserBean;
 
 public class PaymentMethodDAO {
 		
@@ -43,10 +44,11 @@ public class PaymentMethodDAO {
 		try {
 			connection = ds.getConnection(); 
 			preparedStatement = connection.prepareStatement(insertSQL);
-			preparedStatement.setInt(1, pay.getNumeroCarta());
-			preparedStatement.setInt(2, pay.getUtente.getId());
+			preparedStatement.setString(1, pay.getNumeroCarta());
+			UserBean user = pay.getUtente(); 
+			preparedStatement.setInt(2, user.getId());
 			preparedStatement.setDate(3, pay.getScadenza());
-			preparedStatement.setInt(4, pay.getCvv());
+			preparedStatement.setString(4, pay.getCvv());
 			
 			preparedStatement.executeUpdate(); 
 
@@ -85,7 +87,7 @@ public class PaymentMethodDAO {
 		
 				while (rs.next()) {
 					
-					bean.setNumeroCarta((char) rs.getInt("numeroCarta"));
+					bean.setNumeroCarta(rs.getString("numeroCarta"));
 					
 	                UserBean user = new UserBean();
 	                user.setId(rs.getInt("idUtente"));
@@ -94,7 +96,7 @@ public class PaymentMethodDAO {
 	                bean.setUtente(user);
 					
 	                bean.setScadenza(rs.getDate("scadenza"));
-					bean.setCvv((char) rs.getInt("cvv"));
+					bean.setCvv(rs.getString("cvv"));
 				}
 		}finally {
 			try {
@@ -140,11 +142,11 @@ public class PaymentMethodDAO {
 
 
 
-		public synchronized Collection<PaymentMEthodBean> doRetrieveAll(String order) throws SQLException {
+		public synchronized Collection<PaymentMethodBean> doRetrieveAll(String order) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 		
-			Collection<PaymentMEthodBean> payments = new LinkedList<PaymentMEthodBean>();
+			Collection<PaymentMethodBean> payments = new LinkedList<PaymentMethodBean>();
 		
 			String selectSQL = "SELECT * FROM " + TABLE_NAME;
 		
@@ -162,7 +164,7 @@ public class PaymentMethodDAO {
 					
 					PaymentMethodBean bean = new PaymentMethodBean();
 					
-					bean.setNumeroCarta((char)rs.getInt("numeroCarta"));
+					bean.setNumeroCarta(rs.getString("numeroCarta"));
 					
 					UserBean user = new UserBean();
 		            user.setId(rs.getInt("idUtente"));
@@ -171,7 +173,7 @@ public class PaymentMethodDAO {
 		            bean.setUtente(user);
 		            
 		            bean.setScadenza(rs.getDate("scadenza"));
-		            bean.setCvv((char) rs.getCvv("cvv"));
+		            bean.setCvv(rs.getString("cvv"));
 		             
 		            payments.add(bean);
 				}

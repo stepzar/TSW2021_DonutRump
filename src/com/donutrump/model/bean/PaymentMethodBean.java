@@ -8,25 +8,25 @@ public class PaymentMethodBean implements Serializable {
 	private static final long serialVersionUID = -1096552767583246583L;
 	
 	public PaymentMethodBean() {
-		this.numeroCarta = 0;
-		this.cvv = 0;
+		this.numeroCarta = "";
+		this.cvv = "";
 		this.scadenza = null;
 		this.user = null;
 	}
 	
-	public char getNumeroCarta() {
+	public String getNumeroCarta() {
 		return this.numeroCarta;
 	}
 	
-	public void setNumeroCarta(char newCn) {
+	public void setNumeroCarta(String newCn) {
 		this.numeroCarta = newCn;
 	}
 	
-	public char getCvv() {
+	public String getCvv() {
 		return this.cvv;
 	}
 	
-	public void setCvv(char newCvv) {
+	public void setCvv(String newCvv) {
 		this.cvv = newCvv;
 	}
 	
@@ -46,7 +46,7 @@ public class PaymentMethodBean implements Serializable {
 		this.user = newUtente;
 	}
 	
-	private char cvv, numeroCarta;
+	private String cvv, numeroCarta;
 	private Date scadenza;
 	private UserBean user;
 }
