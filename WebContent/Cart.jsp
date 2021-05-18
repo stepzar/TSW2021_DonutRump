@@ -3,11 +3,12 @@
     
 <%
 	Cart cart = (Cart)request.getSession().getAttribute("cart");
+	GeneralProductDAO model = new GeneralProductDAO();
 %>
 
 <!DOCTYPE html>
 <html>
-<%@ page contentType="text/html; charset=UTF-8" import="java.util.*, com.donutrump.model.bean.*"%>
+<%@ page contentType="text/html; charset=UTF-8" import="java.util.HashMap, java.util.Map, com.donutrump.model.bean.*, com.donutrump.model.dao.GeneralProductDAO"%>
 	<head>
 		<meta charset=UTF-8>
 		<title>Carrello</title>
@@ -26,20 +27,11 @@
 				<th>Azioni</th>
 			</tr>
 			<%	if (cart != null && cart.getProducts().size() != 0) {
-					ArrayList<GeneralProductBean> carrello = cart.getProducts();
-					ArrayList<Integer> visited = new ArrayList<Integer>();
+					HashMap<Integer, Integer> carrello = cart.getProducts();
 					
-					for(GeneralProductBean bean: carrello){
-						int quantita = 0;
-						for(GeneralProductBean bean2: carrello){
-							if(bean.getId() == bean2.getId()){
-								quantita++;
-							}
-						}
-						
-						//qui stiamo settando la quantita iniziale che il prodotto ha nel carello (cioè quella aggiunta dal catalogo o in generale da fuori il carrello)
-						if(!visited.contains(bean.getId())){
-							visited.add(bean.getId());
+					for(Map.Entry<Integer, Integer> entry: carrello.entrySet()){
+						GeneralProductBean bean = model.doRetrieveByKey(entry.getKey());
+						int quantita = entry.getValue();		
 			%>
 			<tr>
 				<td><%=bean.getNome()%></td>
@@ -55,20 +47,14 @@
 					</form> 
 				</td>
 				<td>
-					  <a href="Product?action=cart&deleteFromCart=true&id=<%=bean.getId()%>&oldQuantity=<%=quantita%>">Elimina dal carrello</a><br> <!-- qua sto creando questo parametro deleteFromCart che gestirò nella servlet -->
+					  <a href="Product?action=deletefromcart&id=<%=bean.getId()%>">Rimuovi</a><br> <!-- qua sto creando questo parametro deleteFromCart che gestirò nella servlet -->
 				</td>
 				
 				
 				
-			<% }}} else{ %> 
+			<% }} else{ %> 
 				<td colspan="6"> Il carrello è vuoto</td>
 			<%} %>	
-			
-			
-			<!-- questo codice lo esegue dopo il return della servlet -->	
-			<%  if ( request.getParameter("deleteFromCart")!=null && request.getParameter("deleteFromCart").equals("true") ){
-				response.sendRedirect("Product?action=cart"); //il sendRedirect è meglio usarlo nelle jsp rispetto che nelle Servlet
-			} %>	
 
 			</tr>
 

@@ -2,54 +2,43 @@
 
 package com.donutrump.model.bean;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Cart {
 
 	public Cart() {
-		products = new ArrayList<GeneralProductBean>();
+		products = new HashMap<Integer, Integer>();
 	}
 	
-	public void addProduct(GeneralProductBean product) {
-		products.add(product);
-		// controlliamo se gi√† esiste e nel caso aumentiamo la quantita
-	}
-	
-	public void deleteProduct(GeneralProductBean product) {
-		for(GeneralProductBean item : products) {
-			if(item.getId() == product.getId()) {
-				products.remove(item);
-				break; 
-			}
+	public void addProduct(int id) {
+		if(isPresent(id)) {
+			int quantita = (int) products.get(id);
+			products.put(id, quantita+1);
 		}
- 	}
+		else
+			products.put(id, 1);
+	}
+	
+	public void setQuantity(int id, int newQuantity) {
+		products.put(id, newQuantity);
+	}
 	
 	//Rimuove un prodotto dal carrello indipendentemente dalla quantit‡
-	public void deleteAllProduct(GeneralProductBean product) {
-		for(GeneralProductBean item : products) {
-			if(item.getId() == product.getId()) {
-				products.remove(item);
-			}
-		}
+	public void deleteAllProduct(int id) {
+		products.remove(id);
  	}
 	
-	public boolean isPresent (GeneralProductBean product) {
-		boolean flag = false; 
-		for(GeneralProductBean item : products) {
-			if(item.getId() == product.getId()) {
-				flag = true;
-				break; 
-			}
-		}
-		return flag; 
+	public boolean isPresent (int id) {
+		if(products.containsKey(id))
+			return true;
+		else
+			return false;
 	}
 	
-	
-	
-	public ArrayList<GeneralProductBean> getProducts() {
-		return  products;
+	public HashMap<Integer, Integer> getProducts() {
+		return  (HashMap<Integer, Integer>) products;
 	}
-	
 		
-	private ArrayList<GeneralProductBean> products;
+	private Map products;
 }

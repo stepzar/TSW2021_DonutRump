@@ -25,6 +25,8 @@ public class GeneralProductServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
+		String sort = request.getParameter("sort");
+		
 		String action = request.getParameter("action");
 		
 		String cancellaDalCarrello = request.getParameter("deleteFromCart");
@@ -41,52 +43,32 @@ public class GeneralProductServlet extends HttpServlet{
 			request.getSession().setAttribute("cart", cart);
 		}
 		
-		
 		try {
-			
-			
-			
-			
 			if (action != null) {
-				
 				//CARRELLO
 				//modifica quantità dei prodotti
-				if (quantita != 0 && action.equalsIgnoreCase("cart")) {
-						
+				if (quantita > 0 && action.equalsIgnoreCase("cart")) {
 					int id = Integer.parseInt(request.getParameter("id"));
-					int quantitaVecchia = Integer.parseInt(request.getParameter("oldQuantity"));
-					if (quantita >= quantitaVecchia) {
-						for (int i=quantitaVecchia; i<quantita; i++) cart.addProduct(model.doRetrieveByKey(id));
-					}
-					else {
-						for (int i=quantita; i<quantitaVecchia; i++) cart.deleteProduct(model.doRetrieveByKey(id));
-					}
+					cart.setQuantity(id, quantita);
 				}
 				
-				
-				if (action.equalsIgnoreCase("cart")){
-					
+				if (quantita == 0 && action.equalsIgnoreCase("cart")){					
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
 					dispatcher.forward(request, response);
-					
-					if (cancellaDalCarrello.equalsIgnoreCase("true")) { //cancella il prodotto dal carrello, indipendentemente dalle quantità
-						//cancella dal carrello leggendo l'id
-						int id = Integer.parseInt(request.getParameter("id"));
-						int quantitaDaCancellare = Integer.parseInt(request.getParameter("oldQuantity"));
-						for (int i=0; i<quantitaDaCancellare; i++) cart.deleteProduct(model.doRetrieveByKey(id));
-						
-						return; //Il return ci riporta immmediatamente al punto della jsp deov'eravamo prima, e quest'ultima andrà ad eseguire il sendRedirect 
-					}
-					
-						
 				} 
 				
 				else if (action.equalsIgnoreCase("addcart")){
 					int id = Integer.parseInt(request.getParameter("id"));
-					
 					// aggiungi al carrello
-					GeneralProductBean gp = model.doRetrieveByKey(id);
-					cart.addProduct(gp);
+					cart.addProduct(id);		
+				}
+				
+				else if (action.equalsIgnoreCase("deletefromcart")) {
+					int id = Integer.parseInt(request.getParameter("id"));
+					// eliminiamo dal carrello
+					cart.deleteAllProduct(id);
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					dispatcher.forward(request, response);
 				}
 				
 				
@@ -104,7 +86,7 @@ public class GeneralProductServlet extends HttpServlet{
 					int id = Integer.parseInt(request.getParameter("id"));
 					
 					// vedo se c'è nel carrello
-					boolean presente = cart.isPresent(model.doRetrieveByKey(id));
+					boolean presente = cart.isPresent(id);
 					System.out.println(presente); //debug
 					
 					//elimino dal DB
@@ -112,7 +94,7 @@ public class GeneralProductServlet extends HttpServlet{
 					
 					// elimino dal carrello carrello
 					if (presente==true) {
-						cart.deleteAllProduct(model.doRetrieveByKey(id));
+						cart.deleteAllProduct(id);
 						request.getSession().removeAttribute("cart");
 						request.getSession().setAttribute("cart", cart);
 						
@@ -143,19 +125,16 @@ public class GeneralProductServlet extends HttpServlet{
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
 		}
-
-		String sort = request.getParameter("sort");
-		
 		
 		try {
 			request.removeAttribute("catalog");
 			request.setAttribute("catalog", model.doRetrieveAll(sort));
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
+			dispatcher.forward(request, response);
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
 		}
-
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
-		dispatcher.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
