@@ -5,7 +5,6 @@
     <welcome-file>ProductView.jsp</welcome-file> 
   </welcome-file-list>
 
-
   <resource-ref>
     <description> Riferimento JNDI ad un data source </description>
     <res-ref-name>jdbc/TSW2021_DonutRump</res-ref-name> <!-- Qui, in web.xml definisco il nome della risorsa-->
@@ -20,5 +19,14 @@
   <servlet-mapping> <!--sarebbe un ALIAS -->
     <servlet-name>GeneralProductServlet</servlet-name>
     <url-pattern>/Product</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>UserServlet</servlet-name>
+    <servlet-class>com.donutrump.control.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping> <!--sarebbe un ALIAS -->
+    <servlet-name>UserServlet</servlet-name>
+    <url-pattern>/User</url-pattern>
   </servlet-mapping>
 </web-app>

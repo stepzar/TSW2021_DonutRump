@@ -44,13 +44,15 @@ public class UserDAO {
 		preparedStatement = connection.prepareStatement(insertSQL);
 		preparedStatement.setInt(1, user.getId());
 		preparedStatement.setString(2, user.getNome());
-        preparedStatement.setString(3, user.getCognome());
-        preparedStatement.setString(4, user.getEmail());
-        preparedStatement.setBoolean(5, user.isAdmin());
-        preparedStatement.setString(6, user.getTelefono());
-        preparedStatement.setString(7, user.getPswd());
+	    preparedStatement.setString(3, user.getCognome());
+	    preparedStatement.setString(4, user.getEmail());
+	    preparedStatement.setBoolean(5, user.isAdmin());
+	    preparedStatement.setString(6, user.getTelefono());
+	    preparedStatement.setString(7, user.getPswd());
+	    
+		preparedStatement.executeUpdate(); 
 	}
-
+	
 	finally {
 		try {
 			if (preparedStatement != null)
@@ -65,18 +67,19 @@ public class UserDAO {
 
 	}
 
-	public synchronized UserBean doRetrieveByKey(int code) throws SQLException {
+	public synchronized UserBean doRetrieveByKey(String email, String password) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 	
 		UserBean bean = new UserBean();
 	
-		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE email = ? and pswd = ?";
 	
 		try {
 			connection = ds.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
-			preparedStatement.setInt(1, code);
+			preparedStatement.setString(1, email);
+			preparedStatement.setString(2, password);
 		
 			ResultSet rs = preparedStatement.executeQuery();
 		

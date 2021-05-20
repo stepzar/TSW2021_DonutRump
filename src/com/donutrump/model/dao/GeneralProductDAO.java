@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 import com.donutrump.model.bean.GeneralProductBean;
 
 public class GeneralProductDAO {
-	
 	private static DataSource ds; 
 
 	static {

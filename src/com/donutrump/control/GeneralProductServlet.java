@@ -44,7 +44,7 @@ public class GeneralProductServlet extends HttpServlet{
 		}
 		
 		try {
-			if (action != null) {
+			if (action != null) {				
 				//CARRELLO
 				//modifica quantità dei prodotti
 				if (quantita > 0 && action.equalsIgnoreCase("cart")) {
@@ -135,6 +135,7 @@ public class GeneralProductServlet extends HttpServlet{
 		} catch (SQLException e) {
 			System.out.println("Error:" + e.getMessage());
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -10,112 +10,92 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.donutrump.model.bean.Cart;
-import com.donutrump.model.bean.GeneralProductBean;
-import com.donutrump.model.dao.GeneralProductDAO;
+import com.donutrump.model.dao.UserDAO;
+import com.donutrump.model.bean.UserBean;
 
-/**
- * Servlet implementation class UserServlet
- */
 @WebServlet("/UserServlet")
 public class UserServlet extends HttpServlet {
-private static final long serialVersionUID = 1L;
 	
-	static GeneralProductDAO model = new GeneralProductDAO();
+	private static final long serialVersionUID = 1L;
+	
+	static UserDAO model = new UserDAO();
+	
+    public UserServlet() {
+        super();
+    }
 
-	public UserServlet() {
-		super();
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException
-	{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String action = request.getParameter("action");
-		String quantita = request.getParameter("quantita");
 		
-		Cart cart = (Cart)request.getSession().getAttribute("cart");
-		if(cart == null) {
-			cart = new Cart();
-			request.getSession().setAttribute("cart", cart);
-		}
-		
-		try {
+		if(action.equalsIgnoreCase("login")) {
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
 			
-			if (action != null) {
+			try {
+				UserBean bean = model.doRetrieveByKey(email, password);
+				System.out.println(bean);
 				
-				//CARRELLO
-				if (action.equalsIgnoreCase("cart")){
+				if(!bean.getEmail().equals(email)) {
+					// non esiste
+					System.out.println("Utente Non Trovato");
+					request.setAttribute("utente_non_trovato", "true");
 					
-					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Login.jsp");
 					dispatcher.forward(request, response);
-					
-				} 
-				else if (action.equalsIgnoreCase("addcart")){
-					int id = Integer.parseInt(request.getParameter("id"));
-					
-					// aggiungi al carrello
-					GeneralProductBean gp = model.doRetrieveByKey(id);
-					cart.addProduct(gp);
 				}
-				
-				
-				//CATALOGO
-				if (action.equalsIgnoreCase("read")){
-					int id = Integer.parseInt(request.getParameter("id"));
-					request.removeAttribute("product");
-					request.setAttribute("product", model.doRetrieveByKey(id));
-					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductDetails.jsp");
+				else {
+					// login avvenuto con successo
+					request.getSession().setAttribute("current_user", bean);
+					request.setAttribute("utente_non_trovato", "false");
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
 					dispatcher.forward(request, response);
-				} 
-				
-				else if (action.equalsIgnoreCase("delete")){
-					int id = Integer.parseInt(request.getParameter("id"));
-					model.doDelete(id);
-				} 
-				else if (action.equalsIgnoreCase("insert")){
-					
-					String name = request.getParameter("name");
-					String description = request.getParameter("description");
-					int price = Integer.parseInt(request.getParameter("price"));
-					int quantity = Integer.parseInt(request.getParameter("quantity"));
-					double iva = Double.parseDouble(request.getParameter("iva"));
-
-					GeneralProductBean bean = new GeneralProductBean();
-					
-					bean.setNome(name);
-					bean.setDescrizione(description);
-					bean.setPrezzo(price);
-					bean.setQuantitaDisponibile(quantity);
-					bean.setIva(iva);
-						
-					model.doSave(bean);
 				}
-				
+			} catch (SQLException e) {
+				System.out.println("Utente Non Trovato, RIPROVARE!");
 			}
+		}
+		else if(action.equalsIgnoreCase("signup")) {
+			String nome = request.getParameter("nome");
+			String cognome = request.getParameter("cognome");
+			String telefono = request.getParameter("telefono");
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
 			
-		} catch (SQLException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
+			UserBean bean = new UserBean();
+			bean.setId(0);
+			bean.setAdmin(false);
+			bean.setNome(nome);
+			bean.setCognome(cognome);
+			bean.setTelefono(telefono);
+			bean.setEmail(email);
+			bean.setPswd(password);
+			
 
-		String sort = request.getParameter("sort");
-		
-		
-		try {
-			request.removeAttribute("catalog");
-			request.setAttribute("catalog", model.doRetrieveAll(sort));
-		} catch (SQLException e) {
-			System.out.println("Error:" + e.getMessage());
-		}
+			try {
+				model.doSave(bean);
+				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Login.jsp");
+				dispatcher.forward(request, response);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 
-		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
-		dispatcher.forward(request, response);
-	}
 	
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doPost(request, response);
+		}
+		
+		else if (action.equalsIgnoreCase("logout")) {
+			request.getSession().removeAttribute("cart");
+			request.getSession().removeAttribute("current_user");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
+			dispatcher.forward(request, response);
+		}
+		
+	}
 
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		doGet(request, response);
 	}
 
 }
-

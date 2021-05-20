@@ -56,6 +56,12 @@ public class UserBean {
 		this.pswd = pswd;
 	}
 
+	@Override
+	public String toString() {
+		return "UserBean [id=" + id + ", nome=" + nome + ", cognome=" + cognome + ", email=" + email + ", isAdmin="
+				+ isAdmin + ", telefono=" + telefono + ", pswd=" + pswd + "]";
+	}
+
 	private int id;
 	private String nome;
 	private String cognome;
