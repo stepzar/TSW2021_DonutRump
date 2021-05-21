@@ -50,6 +50,8 @@ public class GeneralProductServlet extends HttpServlet{
 				if (quantita > 0 && action.equalsIgnoreCase("cart")) {
 					int id = Integer.parseInt(request.getParameter("id"));
 					cart.setQuantity(id, quantita);
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					dispatcher.forward(request, response);
 				}
 				
 				if (quantita == 0 && action.equalsIgnoreCase("cart")){					

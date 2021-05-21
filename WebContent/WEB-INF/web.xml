@@ -29,4 +29,13 @@
     <servlet-name>UserServlet</servlet-name>
     <url-pattern>/User</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>OrderServlet</servlet-name>
+    <servlet-class>com.donutrump.control.OrderServlet</servlet-class>
+  </servlet>
+  <servlet-mapping> <!--sarebbe un ALIAS -->
+    <servlet-name>OrderServlet</servlet-name>
+    <url-pattern>/Order</url-pattern>
+  </servlet-mapping>
 </web-app>

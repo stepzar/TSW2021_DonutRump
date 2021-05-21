@@ -79,8 +79,7 @@ public class GeneralProductDAO {
 	Connection connection = null;
 	PreparedStatement preparedStatement = null; 
 
-	String insertSQL = "UPDATE " + TABLE_NAME
-	+ " SET quantita_disponibile = ? WHERE id = ?";  
+	String insertSQL = "UPDATE " + TABLE_NAME + " SET quantita_disponibile = ? WHERE id = ?";  
 
 	try {
 		connection = ds.getConnection(); 

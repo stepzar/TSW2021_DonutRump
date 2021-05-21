@@ -2,6 +2,7 @@ package com.donutrump.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,12 +16,15 @@ import javax.servlet.http.HttpServletResponse;
 import com.donutrump.model.bean.*;
 import com.donutrump.model.dao.*;
 
-@WebServlet("/Order")
+@WebServlet("/OrderServlet")
 public class OrderServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	static GeneralProductDAO model = new GeneralProductDAO();
+	static AddressDAO addressModel = new AddressDAO(); 
 	static InstanceProductDAO InstanceModel = new InstanceProductDAO();
+	static OrderDAO orderModel = new OrderDAO();
+	static PaymentMethodDAO payModel = new PaymentMethodDAO(); 
        
     public OrderServlet() {
         super();
@@ -41,52 +45,116 @@ public class OrderServlet extends HttpServlet {
 					dispatcher.forward(request, response);
 				}
 				
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Payment.jsp");
+					dispatcher.forward(request, response);
+
+			}
+			
+			else if(action.equalsIgnoreCase("confirm_buy")) {
 				
-				// jsp pagamento -> l'indirizzo e metodo pagamento
-				
-				
-				// TO - DO creaimo ordine
 				OrderBean order = new OrderBean();
+				order.setDataConsegna(null);
+				order.setDataOrdine(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+				int idAddress = Integer.parseInt(request.getParameter("id_indirizzo"));
 				
-				// creiamo istanze prodotto
+				try {
+					order.setIndirizzo(addressModel.doRetrieveByKey(idAddress)); // TO-DO bisogna passarlo e farlo scegliere all'utente
+				} 
+				catch (SQLException e3) {
+					e3.printStackTrace();
+				}
+				
+				String numeroCarta = request.getParameter("numero_carta");
+				System.out.println(numeroCarta);
+				try {
+					System.out.println("Scusa, stiamo facendo quesso");
+					System.out.println(payModel.doRetrieveByKey(numeroCarta));
+					order.setMetodoPagamento(payModel.doRetrieveByKey(numeroCarta)); // TO-DO bisogna passarlo e farlo scegliere all'utente
+					System.out.println(order.getMetodoPagamento().getNumeroCarta());
+				} 
+				catch (SQLException e2) {
+					e2.printStackTrace();
+				}		
+				order.setSpeseSpedizione(7);
+				order.setStato("ricevuto");
+				order.setUtente(currentUser);
+				
+				double importoTotale = 0;
+				int quantitaAcquisto = 0;
+				
 				if (cart != null && cart.getProducts().size() != 0) {
 					HashMap<Integer, Integer> carrello = cart.getProducts();
 					
 					for(Map.Entry<Integer, Integer> entry: carrello.entrySet()){
 						int quantita = entry.getValue();
 						GeneralProductBean bean;
+						
 						try {
 							bean = model.doRetrieveByKey(entry.getKey());
 							
-							for(int i=0; i<quantita; i++) {
-								InstanceProductBean istance = new InstanceProductBean(bean, order);
-								
-								try {
-									// TO-DO aggiungere id ordine
-									
-									if(InstanceModel.doSave(istance)) {
-										// decrementiamo quantita disponibile
-										model.updateQuantity(bean.getId(), bean.getQuantitaDisponibile() - quantita);
-									}
-								} catch (SQLException e) {
-									e.printStackTrace();
-								}
-							}
-						} catch (SQLException e1) {
-							e1.printStackTrace();
+							importoTotale += bean.getPrezzo() * quantita;
+							quantitaAcquisto += quantita;
+						} catch (SQLException e) {
+							e.printStackTrace();
 						}
-						
 					}
 				}
 				
-				request.getSession().removeAttribute("cart");
-				request.getSession().setAttribute("cart", null);
+				order.setQuantitaAcquisto(quantitaAcquisto);
+				order.setImportoTotale(importoTotale);
 				
-				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
-				dispatcher.forward(request, response);
+				try {
+					orderModel.doSave(order);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 				
+				OrderBean ordine;
+				try {
+					ordine = orderModel.lastUserOrder(currentUser.getId());
+					
+					// creiamo istanze prodotto
+					if (cart != null && cart.getProducts().size() != 0) {
+						HashMap<Integer, Integer> carrello = cart.getProducts();
+						
+						for(Map.Entry<Integer, Integer> entry: carrello.entrySet()){
+							int quantita = entry.getValue();
+							GeneralProductBean bean;
+							
+							try {
+								bean = model.doRetrieveByKey(entry.getKey());
+								
+								for(int i=0; i<quantita; i++) {
+									InstanceProductBean istance = new InstanceProductBean(bean, ordine);
+									System.out.println(istance);
+									try {
+	
+										InstanceModel.doSave(istance);
+										
+										// decrementiamo quantita disponibile
+										model.updateQuantity(bean.getId(), bean.getQuantitaDisponibile() - quantita);
+										
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+								}
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+							
+						}
+		
+					request.getSession().removeAttribute("cart");
+					request.getSession().setAttribute("cart", null);
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Cart.jsp");
+					dispatcher.forward(request, response);
+					}
+					
+				} catch (SQLException e2) {
+					e2.printStackTrace();
+				}
 			}
-
 		}
 	}
 

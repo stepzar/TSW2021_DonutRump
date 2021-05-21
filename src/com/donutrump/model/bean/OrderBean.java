@@ -3,18 +3,17 @@ package com.donutrump.model.bean;
 import java.io.Serializable;
 import java.sql.Date;
 
-
 public class OrderBean implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	
 	public OrderBean () {
 		this.id=0;
 		this.dataConsegna=null; 
-		this.dataOrdine=null; 
+		this.dataOrdine=null;
 		this.importoTotale=0; 
-		this.indirizzo=null; 
+		this.indirizzo=null;
+		this.metodoPagamento = null;
 		this.quantitaAcquisto=0; 
 		this.speseSpedizione=0; 
 		this.utente=null; 
@@ -22,30 +21,31 @@ public class OrderBean implements Serializable{
 	}
 	
 	public OrderBean (UserBean utente) {
-		this.id=1;
+		this.id=0;
 		this.dataConsegna=null; 
 		this.dataOrdine=null; 
 		this.importoTotale=0; 
-		this.indirizzo=null; 
+		this.indirizzo=null;
+		this.metodoPagamento = null;
 		this.quantitaAcquisto=0; 
 		this.speseSpedizione=0; 
 		this.utente=utente; 
 		this.stato="attesa"; 
 	}
 	
-	public OrderBean (UserBean utente, AddressBean indirizzo) {
-		this.id=1;
+	public OrderBean (UserBean utente, AddressBean indirizzo, PaymentMethodBean metodoPagamento) {
+		this.id=0;
 		this.dataConsegna=null; 
 		this.dataOrdine=null; 
 		this.importoTotale=0; 
-		this.indirizzo=indirizzo; 
+		this.indirizzo=indirizzo;
+		this.metodoPagamento = metodoPagamento;
 		this.quantitaAcquisto=0; 
 		this.speseSpedizione=0; 
 		this.utente=utente; 
 		this.stato="attesa"; 
 	}
-	
-	
+
 	public int getId() {
 		return id;
 	}
@@ -68,6 +68,14 @@ public class OrderBean implements Serializable{
 
 	public void setIndirizzo(AddressBean indirizzo) {
 		this.indirizzo = indirizzo;
+	}
+	
+	public PaymentMethodBean getMetodoPagamento() {
+		return metodoPagamento;
+	}
+
+	public void setMetodoPagamento(PaymentMethodBean metodoPagamento) {
+		this.metodoPagamento = metodoPagamento;
 	}
 
 	public Date getDataOrdine() {
@@ -122,6 +130,7 @@ public class OrderBean implements Serializable{
 	private int id; 
 	private UserBean utente; 
 	private AddressBean indirizzo; 
+	private PaymentMethodBean metodoPagamento;
 	private String stato;
 	private Date dataOrdine; 
 	private double importoTotale; 

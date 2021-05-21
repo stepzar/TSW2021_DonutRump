@@ -54,6 +54,10 @@ public class AddressBean {
 	public void setCitta(String citta) {
 		this.citta = citta;
 	}
+	
+	public String toString() {
+		return via + " "+nCivico +", "+ citta+ " ("+provincia+") "+cap;
+	}
 
 	private int id;
 	private UserBean utente;

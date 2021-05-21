@@ -46,6 +46,12 @@ public class PaymentMethodBean implements Serializable {
 		this.user = newUtente;
 	}
 	
+	@Override
+	public String toString() {
+		return "PaymentMethodBean [cvv=" + cvv + ", numeroCarta=" + numeroCarta + ", scadenza=" + scadenza + ", user="
+				+ user + "]";
+	}
+
 	private String cvv, numeroCarta;
 	private Date scadenza;
 	private UserBean user;

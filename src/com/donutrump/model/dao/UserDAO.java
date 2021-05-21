@@ -113,7 +113,7 @@ public class UserDAO {
 	
 		UserBean bean = new UserBean();
 	
-		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ? and password = ?";
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE email = ? and pswd = ?";
 	
 		try {
 			connection = ds.getConnection();
@@ -121,7 +121,6 @@ public class UserDAO {
 			preparedStatement.setString(1, email);
 			preparedStatement.setString(2, password);
 			
-		
 			ResultSet rs = preparedStatement.executeQuery();
 		
 			while (rs.next()) { 				

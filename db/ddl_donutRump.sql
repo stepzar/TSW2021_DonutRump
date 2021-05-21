@@ -43,7 +43,7 @@ create table prodottoGenerico(
     
 create table metodoPagamento 
 (
- numeroCarta char(16) primary key,
+ numeroCarta varchar(150) primary key,
  idUtente bigint, 
  scadenza date not null,
  cvv char(3) not null,
@@ -59,11 +59,13 @@ create table metodoPagamento
  importoTotale double precision default 0,
  speseSpedizione double precision default 0,
  quantitaAcquisto int not null, 
- dataConsegna date not null,
+ dataConsegna date,
+ metodoPagamento varchar(150),
 
  foreign key (idUtente) references utente(id) on update cascade on delete set null,
- foreign key (idIndirizzo) references Indirizzo(id) on update no action on delete no action #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
-);
+ foreign key (idIndirizzo) references Indirizzo(id) on update no action on delete no action, #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
+ foreign key (metodoPagamento) references metodoPagamento(numeroCarta) on update no action on delete no action
+ );
 
 create table istanzaProdotto(
     id bigint auto_increment primary key,

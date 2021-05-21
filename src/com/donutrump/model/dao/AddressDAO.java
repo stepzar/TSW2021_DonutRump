@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -49,6 +50,8 @@ public class AddressDAO {
             preparedStatement.setString(5, address.getVia());
             preparedStatement.setString(6, address.getProvincia());
             preparedStatement.setString(7, address.getCitta());
+            
+            preparedStatement.executeUpdate();
         }
 
         finally {
@@ -64,6 +67,63 @@ public class AddressDAO {
         }
 
 	}
+	
+	public synchronized ArrayList<AddressBean> userAddresses(int idUtente){
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+	
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE idUtente = ?";
+		
+
+		ArrayList<AddressBean> addresses = new ArrayList<AddressBean>();
+		
+		try {
+			connection = ds.getConnection();
+			
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, idUtente);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+		
+			while (rs.next()) {                                     
+				AddressBean bean = new AddressBean();
+			
+				bean.setId(rs.getInt("id"));
+
+	            UserDAO userModel = new UserDAO();
+	            UserBean user = userModel.doRetrieveByKey(idUtente);
+	            bean.setUtente(user);
+
+	            bean.setCap(rs.getString("cap"));
+	            bean.setnCivico(rs.getInt("nCivico"));
+	            bean.setVia(rs.getString("via"));
+	            bean.setProvincia(rs.getString("provincia"));
+	            bean.setCitta(rs.getString("citta"));
+	            
+				addresses.add(bean);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (preparedStatement != null)
+			try {
+				preparedStatement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		if (connection != null)
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		return addresses;
+	}
+		
+	
 
 	public synchronized AddressBean doRetrieveByKey(int code) throws SQLException {
 		Connection connection = null;

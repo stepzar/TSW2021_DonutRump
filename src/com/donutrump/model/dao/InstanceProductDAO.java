@@ -35,16 +35,13 @@ public class InstanceProductDAO {
 
     private static final String TABLE_NAME = "istanzaprodotto";
 
-    public synchronized boolean doSave(InstanceProductBean product) throws SQLException {
+    public synchronized void doSave(InstanceProductBean product) throws SQLException {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
 
-        String insertSQL = "INSERT INTO " + TABLE_NAME +
-            " VALUES (?, ?, ?, ?, ?)";
-        
-        int flag = 0;
+        String insertSQL = "INSERT INTO " + TABLE_NAME +" VALUES (?, ?, ?, ?, ?)";
 
         try {
             connection = ds.getConnection();
@@ -55,7 +52,7 @@ public class InstanceProductDAO {
             preparedStatement.setInt(4, product.getProdottoGenerico().getId());
             preparedStatement.setInt(5, product.getOrdine().getId());
 
-            flag = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
         } finally {
             try {
@@ -66,11 +63,6 @@ public class InstanceProductDAO {
                     connection.close();
             }
         }
-        
-        if(flag == 0)
-        	return false;
-        else
-        	return true;
     }
 
     public synchronized InstanceProductBean doRetrieveByKey(int id) throws SQLException {
@@ -79,7 +71,7 @@ public class InstanceProductDAO {
 
         InstanceProductBean bean = new InstanceProductBean();
 
-        String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?";
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where id = ?";
 
         try {
             connection = ds.getConnection();

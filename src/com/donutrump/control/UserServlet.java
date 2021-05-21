@@ -33,7 +33,7 @@ public class UserServlet extends HttpServlet {
 			String password = request.getParameter("password");
 			
 			try {
-				UserBean bean = model.doRetrieveByKey(email, password);
+				UserBean bean = model.verifyUser(email, password); //verifyUser ci va qui
 				System.out.println(bean);
 				
 				if(!bean.getEmail().equals(email)) {

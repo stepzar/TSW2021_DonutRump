@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -12,15 +13,14 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.donutrump.model.bean.AddressBean;
 import com.donutrump.model.bean.PaymentMethodBean;
 import com.donutrump.model.bean.UserBean;
 
 public class PaymentMethodDAO {
-		
 	private static DataSource ds; 
 
 		static {
-			
 			try {
 				Context initCtx = new InitialContext();
 				Context envCtx = (Context) initCtx.lookup("java:comp/env");
@@ -30,7 +30,7 @@ public class PaymentMethodDAO {
 				}
 			}
 		
-		private static final String TABLE_NAME = "metodoPagamento"; 
+		private static final String TABLE_NAME = "metodopagamento"; 
 		
 		public synchronized void doSave (PaymentMethodBean pay) throws SQLException {  
 
@@ -70,31 +70,27 @@ public class PaymentMethodDAO {
 
 		}
 
-		public synchronized PaymentMethodBean doRetrieveByKey(int id) throws SQLException {
+		public synchronized PaymentMethodBean doRetrieveByKey(String id) throws SQLException {
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 			
 			PaymentMethodBean bean = new PaymentMethodBean();
 
-			String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?"; 
+			String selectSQL = "SELECT * FROM " + TABLE_NAME + " where numeroCarta = ?"; 
 						
 			try {
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(selectSQL);
-				preparedStatement.setInt(1, id);
+				preparedStatement.setString(1, id);
 		
 				ResultSet rs = preparedStatement.executeQuery();
 		
 				while (rs.next()) {
-					
 					bean.setNumeroCarta(rs.getString("numeroCarta"));
 					
-	                UserBean user = new UserBean();
-	                user.setId(rs.getInt("idUtente"));
 	                UserDAO userModel = new UserDAO();
-	                user = userModel.doRetrieveByKey(user.getId());
+	                UserBean user = userModel.doRetrieveByKey(rs.getInt("idUtente"));
 	                bean.setUtente(user);
-					
 	                bean.setScadenza(rs.getDate("scadenza"));
 					bean.setCvv(rs.getString("cvv"));
 				}
@@ -113,19 +109,19 @@ public class PaymentMethodDAO {
 			}
 
 		
-		public synchronized boolean doDelete(int id) throws SQLException {
+		public synchronized boolean doDelete(String id) throws SQLException {
 			
 			Connection connection = null;
 			PreparedStatement preparedStatement = null;
 	
 			int result = 0;
 	
-			String deleteSQL = "DELETE * FROM " + TABLE_NAME + "where id = ?"; 
+			String deleteSQL = "DELETE * FROM " + TABLE_NAME + "where numeroCarta = ?"; 
 	
 			try {
 				connection = ds.getConnection();
 				preparedStatement = connection.prepareStatement(deleteSQL);
-				preparedStatement.setInt(1, id);
+				preparedStatement.setString(1, id);
 		
 				result = preparedStatement.executeUpdate();
 			} finally {
@@ -190,5 +186,64 @@ public class PaymentMethodDAO {
 			}
 			return payments;
 		}
-	}
+		
+		public synchronized ArrayList<PaymentMethodBean> userPayments(int idUtente){
+			Connection connection = null;
+			PreparedStatement preparedStatement = null;
+		
+			String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE idUtente = ?";
+			
+
+			ArrayList<PaymentMethodBean> pays = new ArrayList<PaymentMethodBean>();
+			
+			try {
+				connection = ds.getConnection();
+				
+				preparedStatement = connection.prepareStatement(selectSQL);
+				preparedStatement.setInt(1, idUtente);
+				
+				ResultSet rs = preparedStatement.executeQuery();
+			
+				while (rs.next()) {                                     
+					PaymentMethodBean bean = new PaymentMethodBean();
+					
+					bean.setNumeroCarta(rs.getString("numeroCarta"));
+					
+					UserBean user = new UserBean();
+		            user.setId(rs.getInt("idUtente"));
+		            UserDAO userModel = new UserDAO();
+		            user = userModel.doRetrieveByKey(user.getId());
+		            bean.setUtente(user);
+		            
+		            bean.setScadenza(rs.getDate("scadenza"));
+		            bean.setCvv(rs.getString("cvv"));
+		             
+		            pays.add(bean);
+					
+				}
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			
+			if (preparedStatement != null)
+				try {
+					preparedStatement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			if (connection != null)
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			return pays;
+		}
+			
+			
+}
+		
+	
 

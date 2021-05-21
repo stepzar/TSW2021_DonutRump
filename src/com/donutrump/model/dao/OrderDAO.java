@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -32,16 +33,15 @@ public class OrderDAO {
 
     private static final String TABLE_NAME = "ordine";
 
-    public synchronized boolean doSave(OrderBean order) throws SQLException {
-
+    public synchronized void doSave(OrderBean order) throws SQLException {
+    	// restitutisce l'id
+    	
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
 
         String insertSQL = "INSERT INTO " + TABLE_NAME +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
-        int flag = 0;
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             connection = ds.getConnection();
@@ -55,8 +55,9 @@ public class OrderDAO {
             preparedStatement.setDouble(7, order.getSpeseSpedizione());
             preparedStatement.setInt(8, order.getQuantitaAcquisto());
             preparedStatement.setDate(9, order.getDataConsegna());
+            preparedStatement.setString(10, order.getMetodoPagamento().getNumeroCarta());
             
-            flag = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
         } finally {
             try {
@@ -67,11 +68,6 @@ public class OrderDAO {
                     connection.close();
             }
         }
-        
-        if(flag == 0)
-        	return false;
-        else
-        	return true;
     }
 
     public synchronized OrderBean doRetrieveByKey(int id) throws SQLException {
@@ -80,10 +76,11 @@ public class OrderDAO {
         
         UserDAO userModel = new UserDAO(); 
         AddressDAO addressModel = new AddressDAO();
+        PaymentMethodDAO paymentModel = new PaymentMethodDAO();
 
         OrderBean bean = new OrderBean();
 
-        String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?";
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where id = ?";
 
         try {
             connection = ds.getConnection();
@@ -102,7 +99,7 @@ public class OrderDAO {
                 bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
                 bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
                 bean.setDataConsegna(rs.getDate("dataConsegna"));
-
+                bean.setMetodoPagamento(paymentModel.doRetrieveByKey(rs.getString("metodoPagamento")));
             }
 
         } finally {
@@ -115,6 +112,98 @@ public class OrderDAO {
             }
         }
         return bean;
+    }
+    
+    public synchronized OrderBean lastUserOrder(int idUtente) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        
+        UserDAO userModel = new UserDAO(); 
+        AddressDAO addressModel = new AddressDAO();
+        PaymentMethodDAO paymentModel = new PaymentMethodDAO();
+
+        OrderBean bean = new OrderBean();
+
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where idUtente = ? ORDER BY id DESC LIMIT 1";
+
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, idUtente);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                bean.setId(rs.getInt("id"));
+                bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setStato(rs.getString("stato"));
+                bean.setDataOrdine(rs.getDate("dataOrdine"));
+                bean.setImportoTotale(rs.getDouble("importoTotale"));
+                bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
+                bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
+                bean.setDataConsegna(rs.getDate("dataConsegna"));
+                bean.setMetodoPagamento(paymentModel.doRetrieveByKey(rs.getString("metodoPagamento")));
+            }
+
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return bean;
+    }
+    
+    public synchronized ArrayList<OrderBean> userOrders(int idUtente) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        
+        UserDAO userModel = new UserDAO(); 
+        AddressDAO addressModel = new AddressDAO();
+        PaymentMethodDAO paymentModel = new PaymentMethodDAO();
+
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where idUtente = ? ORDER BY id DESC";
+        
+        ArrayList<OrderBean> orders = new ArrayList<OrderBean>();
+        
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, idUtente);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+            	OrderBean bean = new OrderBean();
+            	
+                bean.setId(rs.getInt("id"));
+                bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setStato(rs.getString("stato"));
+                bean.setDataOrdine(rs.getDate("dataOrdine"));
+                bean.setImportoTotale(rs.getDouble("importoTotale"));
+                bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
+                bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
+                bean.setDataConsegna(rs.getDate("dataConsegna"));
+                bean.setMetodoPagamento(paymentModel.doRetrieveByKey(rs.getString("metodoPagamento")));
+                
+                orders.add(bean);
+            }
+
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return orders;
     }
 
 
@@ -155,6 +244,7 @@ public class OrderDAO {
         
         UserDAO userModel = new UserDAO(); 
         AddressDAO addressModel = new AddressDAO();
+        PaymentMethodDAO paymentModel = new PaymentMethodDAO();
 
         String selectSQL = "SELECT * FROM " + TABLE_NAME;
 
@@ -180,6 +270,7 @@ public class OrderDAO {
                 bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
                 bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
                 bean.setDataConsegna(rs.getDate("dataConsegna"));
+                bean.setMetodoPagamento(paymentModel.doRetrieveByKey(rs.getString("metodoPagamento")));
                
 
                 orders.add(bean);

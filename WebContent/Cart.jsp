@@ -60,7 +60,10 @@
 			</table>
 		</div>
 		
-		<a href="Order?action=buy">Acquista</a>
+		<div style="text-align: center; margin-top: 20px;">
+			<a href="Order?action=buy" class="btn btn-primary">Acquista</a>
+		</div>
+		
 		
 	</body>
 </html>

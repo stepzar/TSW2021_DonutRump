@@ -6,7 +6,7 @@
 	String utente_non_trovato = (String) request.getAttribute("utente_non_trovato");
 %>
 
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <%@ page contentType="text/html; charset=UTF-8"%>
 	<head>
