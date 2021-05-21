@@ -45,6 +45,7 @@ public class GeneralProductBean implements Serializable{
 			}
 		else {
 			this.quantitaDisponibile = quantitaDisponibile;
+			this.disponibilita = true;
 			return true;
 		}
 	}

@@ -72,11 +72,40 @@ public class GeneralProductDAO {
 				connection.close();
 		}
 	}
+	}
+	
+	public synchronized void updateQuantity (int id, int newQuantity) throws SQLException {  
 
+	Connection connection = null;
+	PreparedStatement preparedStatement = null; 
 
+	String insertSQL = "UPDATE " + TABLE_NAME
+	+ " SET quantita_disponibile = ? WHERE id = ?";  
 
+	try {
+		connection = ds.getConnection(); 
+		preparedStatement = connection.prepareStatement(insertSQL);
+		preparedStatement.setInt(1, newQuantity);
+		preparedStatement.setInt(2, id);
+
+		preparedStatement.executeUpdate(); 
+	
+		//connection.commit();
 	}
 
+	finally {
+		try {
+			if (preparedStatement != null)
+				preparedStatement.close();
+		} 
+		
+		finally {
+			if (connection != null)
+				connection.close();
+		}
+	}
+	}
+	
 	public synchronized GeneralProductBean doRetrieveByKey(int code) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;

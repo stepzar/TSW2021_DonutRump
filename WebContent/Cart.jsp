@@ -59,5 +59,8 @@
 	
 			</table>
 		</div>
+		
+		<a href="Order?action=buy">Acquista</a>
+		
 	</body>
 </html>

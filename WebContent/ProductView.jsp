@@ -70,7 +70,17 @@
 	
 				<td><a href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br>
 					<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a><br>
-					<a href="Product?action=addcart&id=<%=bean.getId()%>">Aggiungi al Carrello</a></td> 
+			<%
+					if(bean.isDisponibilita()){
+			%>
+					<a href="Product?action=addcart&id=<%=bean.getId()%>" class="btn btn-primary btn-sm">Aggiungi al Carrello</a></td> 
+			<%
+					}else{
+			%>
+					<a href="#" class="btn btn-secondary btn-sm disabled">Aggiungi al Carrello</a>
+			<%
+					}
+			%>
 	 		</tr>
 	 		
 			<%

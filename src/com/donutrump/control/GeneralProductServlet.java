@@ -60,7 +60,8 @@ public class GeneralProductServlet extends HttpServlet{
 				else if (action.equalsIgnoreCase("addcart")){
 					int id = Integer.parseInt(request.getParameter("id"));
 					// aggiungi al carrello
-					cart.addProduct(id);		
+					if(model.doRetrieveByKey(id).isDisponibilita())	
+						cart.addProduct(id);
 				}
 				
 				else if (action.equalsIgnoreCase("deletefromcart")) {

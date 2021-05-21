@@ -62,7 +62,7 @@ create table metodoPagamento
  dataConsegna date not null,
 
  foreign key (idUtente) references utente(id) on update cascade on delete set null,
- foreign key (idIndirizzo, idUtente) references Indirizzo(id, idUtente) on update no action on delete no action #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
+ foreign key (idIndirizzo) references Indirizzo(id) on update no action on delete no action #lo gestiamo noi lato client,ma preferiamo mantenere tutti i dati degli indirizzi
 );
 
 create table istanzaProdotto(
