@@ -12,14 +12,11 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.donutrump.model.bean.GeneralProductBean;
-import com.donutrump.model.bean.InstanceProductBean;
+import com.donutrump.model.bean.OrderBean;
 
-
-
-public class InstanceProductDAO {
-
-    private static DataSource ds;
+public class OrderDAO {
+    
+	private static DataSource ds;
 
     static {
         try {
@@ -33,28 +30,32 @@ public class InstanceProductDAO {
         }
     }
 
-    private static final String TABLE_NAME = "istanzaprodotto";
+    private static final String TABLE_NAME = "ordine";
 
-    public synchronized boolean doSave(InstanceProductBean product) throws SQLException {
+    public synchronized boolean doSave(OrderBean order) throws SQLException {
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
 
         String insertSQL = "INSERT INTO " + TABLE_NAME +
-            " VALUES (?, ?, ?, ?, ?)";
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         int flag = 0;
 
         try {
             connection = ds.getConnection();
             preparedStatement = connection.prepareStatement(insertSQL);
-            preparedStatement.setDouble(1, product.getId());
-            preparedStatement.setDouble(2, product.getIvaAcquisto());
-            preparedStatement.setDouble(3, product.getPrezzoAcquisto());
-            preparedStatement.setInt(4, product.getProdottoGenerico().getId());
-            preparedStatement.setInt(5, product.getOrdine().getId());
-
+            preparedStatement.setDouble(1, order.getId());
+            preparedStatement.setInt(2, order.getUtente().getId());
+            preparedStatement.setInt(3, order.getIndirizzo().getId());
+            preparedStatement.setString(4, order.getStato());
+            preparedStatement.setDate(5,order.getDataOrdine()); 
+            preparedStatement.setDouble(6, order.getImportoTotale());
+            preparedStatement.setDouble(7, order.getSpeseSpedizione());
+            preparedStatement.setInt(8, order.getQuantitaAcquisto());
+            preparedStatement.setDate(9, order.getDataConsegna());
+            
             flag = preparedStatement.executeUpdate();
 
         } finally {
@@ -73,11 +74,14 @@ public class InstanceProductDAO {
         	return true;
     }
 
-    public synchronized InstanceProductBean doRetrieveByKey(int id) throws SQLException {
+    public synchronized OrderBean doRetrieveByKey(int id) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
+        
+        UserDAO userModel = new UserDAO(); 
+        AddressDAO addressModel = new AddressDAO();
 
-        InstanceProductBean bean = new InstanceProductBean();
+        OrderBean bean = new OrderBean();
 
         String selectSQL = "SELECT * FROM " + TABLE_NAME + "where id = ?";
 
@@ -90,17 +94,15 @@ public class InstanceProductDAO {
 
             while (rs.next()) {
                 bean.setId(rs.getInt("id"));
-                bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
-                bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
+                bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setStato(rs.getString("stato"));
+                bean.setDataOrdine(rs.getDate("dataOrdine"));
+                bean.setImportoTotale(rs.getDouble("importoTotale"));
+                bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
+                bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
+                bean.setDataConsegna(rs.getDate("dataConsegna"));
 
-                GeneralProductBean gp = new GeneralProductBean();
-                gp.setId(rs.getInt("prodottoGenerico"));
-                GeneralProductDAO gpModel = new GeneralProductDAO();
-                gp = gpModel.doRetrieveByKey(gp.getId());
-                bean.setProdottoGenerico(gp);
-
-                OrderDAO ordModel = new OrderDAO ();                
-                bean.setOrdine(ordModel.doRetrieveByKey(rs.getInt("idOrdine")));
             }
 
         } finally {
@@ -145,11 +147,14 @@ public class InstanceProductDAO {
 
 
 
-    public synchronized Collection < InstanceProductBean > doRetrieveAll(String order) throws SQLException {
+    public synchronized Collection < OrderBean > doRetrieveAll(String order) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
-        Collection < InstanceProductBean > products = new LinkedList < InstanceProductBean > ();
+        Collection < OrderBean > orders = new LinkedList < OrderBean > ();
+        
+        UserDAO userModel = new UserDAO(); 
+        AddressDAO addressModel = new AddressDAO();
 
         String selectSQL = "SELECT * FROM " + TABLE_NAME;
 
@@ -164,22 +169,20 @@ public class InstanceProductDAO {
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                InstanceProductBean bean = new InstanceProductBean();
-
+                OrderBean bean = new OrderBean();
+                
                 bean.setId(rs.getInt("id"));
-                bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
-                bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
-
-                GeneralProductBean gp = new GeneralProductBean();
-                gp.setId(rs.getInt("prodottoGenerico"));
-                GeneralProductDAO gpModel = new GeneralProductDAO(); 
-                gp = gpModel.doRetrieveByKey(gp.getId());
-                bean.setProdottoGenerico(gp);
+                bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setStato(rs.getString("stato"));
+                bean.setDataOrdine(rs.getDate("dataOrdine"));
+                bean.setImportoTotale(rs.getDouble("importoTotale"));
+                bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
+                bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
+                bean.setDataConsegna(rs.getDate("dataConsegna"));
                
-                OrderDAO ordModel = new OrderDAO ();                
-                bean.setOrdine(ordModel.doRetrieveByKey(rs.getInt("idOrdine")));
 
-                products.add(bean);
+                orders.add(bean);
             }
         } finally {
             try {
@@ -190,7 +193,8 @@ public class InstanceProductDAO {
                     connection.close();
             }
         }
-        return products;
+        return orders;
     }
 
 }
+
