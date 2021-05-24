@@ -56,7 +56,7 @@ public class OrderServlet extends HttpServlet {
 				order.setDataConsegna(null);
 				order.setDataOrdine(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
 				int idAddress = Integer.parseInt(request.getParameter("id_indirizzo"));
-				
+				System.out.println("Servlet Order Address ID: " + request.getParameter("id_indirizzo"));
 				try {
 					order.setIndirizzo(addressModel.doRetrieveByKey(idAddress)); // TO-DO bisogna passarlo e farlo scegliere all'utente
 				} 
@@ -67,10 +67,7 @@ public class OrderServlet extends HttpServlet {
 				String numeroCarta = request.getParameter("numero_carta");
 				System.out.println(numeroCarta);
 				try {
-					System.out.println("Scusa, stiamo facendo quesso");
-					System.out.println(payModel.doRetrieveByKey(numeroCarta));
 					order.setMetodoPagamento(payModel.doRetrieveByKey(numeroCarta)); // TO-DO bisogna passarlo e farlo scegliere all'utente
-					System.out.println(order.getMetodoPagamento().getNumeroCarta());
 				} 
 				catch (SQLException e2) {
 					e2.printStackTrace();

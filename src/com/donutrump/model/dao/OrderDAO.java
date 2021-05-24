@@ -92,7 +92,7 @@ public class OrderDAO {
             while (rs.next()) {
                 bean.setId(rs.getInt("id"));
                 bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
-                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("idIndirizzo")) );
                 bean.setStato(rs.getString("stato"));
                 bean.setDataOrdine(rs.getDate("dataOrdine"));
                 bean.setImportoTotale(rs.getDouble("importoTotale"));
