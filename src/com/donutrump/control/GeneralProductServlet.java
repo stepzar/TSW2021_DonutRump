@@ -17,6 +17,7 @@ public class GeneralProductServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
 	static GeneralProductDAO model = new GeneralProductDAO();
+	static CategoryDAO categoryModel = new CategoryDAO(); 
 
 	public GeneralProductServlet() {
 		super();
@@ -28,8 +29,6 @@ public class GeneralProductServlet extends HttpServlet{
 		String sort = request.getParameter("sort");
 		
 		String action = request.getParameter("action");
-		
-		String cancellaDalCarrello = request.getParameter("deleteFromCart");
 	   
 		String quantitaS = request.getParameter("quantity");
 	    int quantita = 0; 
@@ -95,7 +94,7 @@ public class GeneralProductServlet extends HttpServlet{
 					//elimino dal DB
 					model.doDelete(id);
 					
-					// elimino dal carrello carrello
+					// elimino dal carrello 
 					if (presente==true) {
 						cart.deleteAllProduct(id);
 						request.getSession().removeAttribute("cart");
@@ -108,11 +107,13 @@ public class GeneralProductServlet extends HttpServlet{
 					
 					String name = request.getParameter("name");
 					String description = request.getParameter("description");
-					int price = Integer.parseInt(request.getParameter("price"));
+					double price = Double.parseDouble(request.getParameter("price"));
 					int quantity = Integer.parseInt(request.getParameter("quantity"));
 					double iva = Double.parseDouble(request.getParameter("iva"));
-
-					GeneralProductBean bean = new GeneralProductBean();
+					
+					CategoryBean category = categoryModel.doRetrieveByName(request.getParameter("category"));
+					
+					GeneralProductBean bean = new GeneralProductBean(category);
 					
 					bean.setNome(name);
 					bean.setDescrizione(description);

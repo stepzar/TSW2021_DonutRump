@@ -17,8 +17,19 @@ public class GeneralProductBean implements Serializable{
 		this.iva = 22; 
 		this.disponibilita = false; 
 		this.descrizione = ""; 
+		this.categoria = null; 
 	}
 	
+	public GeneralProductBean(CategoryBean categoria) {
+		this.id = 0; 
+		this.nome = ""; 
+		this.quantitaDisponibile = 0; 
+		this.prezzo= 0; 
+		this.iva = 22; 
+		this.disponibilita = false; 
+		this.descrizione = ""; 
+		this.categoria = categoria; 
+	}
 	
 	public int getId() {
 		return id;
@@ -82,11 +93,11 @@ public class GeneralProductBean implements Serializable{
 		this.descrizione = descrizione;
 	}
 	
-	public int getCategoria() {
+	public CategoryBean getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(int categoria) {
+	public void setCategoria(CategoryBean categoria) {
 		this.categoria = categoria;
 	} 
 
@@ -107,8 +118,8 @@ public class GeneralProductBean implements Serializable{
 	private double iva; 
 	private boolean disponibilita; 
 	private String descrizione; 
+	private CategoryBean categoria;   //La cattegoria momentaneamente non la trattiamo, sar� impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
+  
+	// private BufferedImage immagine; 
 	
-  // private BufferedImage immagine; 
-	private int categoria;   //La cattegoria momentaneamente non la trattiamo, sar� impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
-
 }

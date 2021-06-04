@@ -1,3 +1,4 @@
+<%@page import="java.beans.beancontext.BeanContext"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
@@ -18,7 +19,7 @@
 
 
 <head>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href="ProductStyle.css" rel="stylesheet" type="text/css">
 	<title>DonutRump</title>
@@ -68,8 +69,22 @@
 				<td><%=bean.getDescrizione()%></td>
 				<td><%=bean.getPrezzo()%></td>
 	
-				<td><a href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br>
+				<td>
+	
+				<% 
+				if (user!=null && user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) {
+				%>
+					<a href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br>
+					<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli/Modifica</a><br>
+				<% 
+				}
+				else { 
+				%>	
 					<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a><br>
+				<% 
+				} 
+				%>	
+				
 			<%
 					if(bean.isDisponibilita()){
 			%>
@@ -94,28 +109,24 @@
 				}
 			%>
 		</table>
-		 
-		<h2>Inserisci</h2>
-		<form action="Product" method="get">
-			<input type="hidden" name="action" value="insert"> 
-			
-			<label for="name">Nome:</label><br> 
-			<input name="name" type="text" maxlength="20" required placeholder="enter name"><br> 
-			
-			<label for="description">Descrizione:</label><br>
-			<textarea name="description" maxlength="100" rows="3" required placeholder="enter description"></textarea><br>
-			
-			<label for="price">Prezzo:</label><br> 
-			<input name="price" type="number" min="0" value="0" required><br>
-	
-			<label for="quantity">Quantità:</label><br> 
-			<input name="quantity" type="number" min="1" value="1" required><br>
-			
-			<label for="iva">Iva:</label><br> 
-			<input name="iva" type="number" min="1" value="22" required><br>
-	
-			<input type="submit" value="Aggiungi"><input type="reset" value="Reset">
-		</form>
-	</div>
+		</div>
+		
+		<% 
+		// CONTROLLO DI SICUREZZA
+		if (user!=null && user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) {
+		%>
+		
+		<div class="admin_functions" style="text-align: center; width:20%"> <!-- Qua ci va il CSS per le liste -->
+			<h2>[Funzionalità Amministratore]</h2>
+			<ul>
+				<li> <a href="AdminInsert.jsp"> Inserisci nuovo prodotto </a> </li>
+				<li> <a href="CategoriesManagement.jsp"> Gestione categorie </a></li>
+				<li> <a href="Stefano.jsp"> Visualizza ordini </a></li>
+			</ul>
+		</div>
+		<% 
+		} else {/* does not show it */}
+		%>
+
 </body>
 </html>

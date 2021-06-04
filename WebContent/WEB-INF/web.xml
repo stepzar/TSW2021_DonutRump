@@ -31,6 +31,15 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>com.donutrump.control.AdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping> <!--sarebbe un ALIAS -->
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/Admin</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>OrderServlet</servlet-name>
     <servlet-class>com.donutrump.control.OrderServlet</servlet-class>
   </servlet>

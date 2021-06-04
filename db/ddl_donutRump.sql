@@ -25,7 +25,7 @@ create table indirizzo (
     
 create table categoria(
     id int auto_increment primary key, 
-    nome varchar(45) not null
+    nome varchar(45) not null unique
     );
     
 create table prodottoGenerico(
@@ -78,4 +78,10 @@ create table istanzaProdotto(
     foreign key (idOrdine) references ordine(id) on update cascade on delete set null
     );
     
+    
+insert into categoria values (1, "generico"); #questa è la categoria che "salva" i prodotti senza categorie esplicite (come per esempio la MisteryBox)
+insert into categoria values (2, "dolce"); 
+insert into categoria values (3, "salato"); 
+insert into categoria values (4, "bevande"); 
+insert into utente values (1, "?", "?","admin@donut.rump.com", true, "0824494949", "root"); #creazione dell'admin 
 
