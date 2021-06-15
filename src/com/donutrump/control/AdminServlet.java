@@ -1,7 +1,11 @@
 package com.donutrump.control;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,8 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.donutrump.model.bean.CategoryBean;
+import com.donutrump.model.bean.OrderBean;
+import com.donutrump.model.bean.UserBean;
 import com.donutrump.model.dao.CategoryDAO;
 import com.donutrump.model.dao.GeneralProductDAO;
+import com.donutrump.model.dao.OrderDAO;
+import com.donutrump.model.dao.UserDAO;
 
 
 @WebServlet("/AdminServlet")
@@ -43,41 +51,47 @@ public class AdminServlet extends HttpServlet {
 					String nome_cliente = request.getParameter("nome");
 					String cognome_cliente = request.getParameter("cognome");
 
-					Date data_da = null;
-					Date data_a = null;
+					String data_da = null;
+					String data_a = null;
 					
 					try {
 						if(!data_da_input.equalsIgnoreCase("")) {
-							data_da = Date.valueOf(data_da_input);
+							data_da = data_da_input;
 						}
 						else {
 							//prendo la data del 1 gennaio 2000
-							data_da = Date.valueOf("2000-1-1");
+							data_da = "2000-1-1";
 						}
 						
 						if(!data_a_input.equalsIgnoreCase("")) {
-							data_a = Date.valueOf(data_a_input);
+							data_a = data_a_input;
 						}
 						else {
-							//prendo la data di oggi
-							data_a = new Date(Calendar.getInstance().getTimeInMillis());
+							//prendo la data di oggi e la converto in stringa
+							data_a = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 						}
-						
-						System.out.println("Le date sono:");
-						System.out.println(data_da);
-						System.out.println(data_a);
 						
 						if(nome_cliente != null && cognome_cliente != null) {
 							UserBean cliente = user_model.searchUser(nome_cliente, cognome_cliente);
 							request.setAttribute("cliente", cliente);
 							
 							try {
-								ArrayList<OrderBean> orders = order_model.userDateOrders(cliente.getId(), data_da, data_a);
+								ArrayList<OrderBean> orders = order_model.userDateOrders(cliente.getId(), data_da_input, data_a_input);
 								request.setAttribute("ordini_cliente", orders);
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
 						}
+						
+						if((nome_cliente == null || nome_cliente.equals("")) && (cognome_cliente == null || cognome_cliente.equals(""))) {
+							try {
+								ArrayList<OrderBean> orders = order_model.DateOrders(data_da, data_a);
+								request.setAttribute("ordini_cliente", orders);
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+						
 					}
 					catch (SQLException e) {
 						e.printStackTrace();

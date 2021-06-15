@@ -207,7 +207,7 @@ public class OrderDAO {
         return orders;
     }
     
-    public synchronized ArrayList<OrderBean> userDateOrders(int idUtente, Date data_da, Date data_a) throws SQLException {
+    public synchronized ArrayList<OrderBean> userDateOrders(int idUtente, String data_da, String data_a) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         
@@ -223,8 +223,8 @@ public class OrderDAO {
             connection = ds.getConnection();
             preparedStatement = connection.prepareStatement(selectSQL);
             preparedStatement.setInt(1, idUtente);
-            preparedStatement.setDate(2, data_da);
-            preparedStatement.setDate(3, data_a);
+            preparedStatement.setString(2, data_da);
+            preparedStatement.setString(3, data_a);
             
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -254,8 +254,70 @@ public class OrderDAO {
                     connection.close();
             }
         }
+        
+        for(OrderBean order : orders){
+        	System.out.println("Ordine:");
+        	System.out.println(order.getId());
+        }
+        
         return orders;
     }
+    
+    public synchronized ArrayList<OrderBean> DateOrders(String data_da, String data_a) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        
+        UserDAO userModel = new UserDAO(); 
+        AddressDAO addressModel = new AddressDAO();
+        PaymentMethodDAO paymentModel = new PaymentMethodDAO();
+
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where dataOrdine >= ? and dataOrdine <= ? ORDER BY id DESC";
+        
+        ArrayList<OrderBean> orders = new ArrayList<OrderBean>();
+        
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setString(1, data_da);
+            preparedStatement.setString(2, data_a);
+            
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+            	OrderBean bean = new OrderBean();
+            	
+                bean.setId(rs.getInt("id"));
+                bean.setUtente(userModel.doRetrieveByKey(rs.getInt("idUtente")) );
+                bean.setIndirizzo(addressModel.doRetrieveByKey(rs.getInt("id")) );
+                bean.setStato(rs.getString("stato"));
+                bean.setDataOrdine(rs.getDate("dataOrdine"));
+                bean.setImportoTotale(rs.getDouble("importoTotale"));
+                bean.setSpeseSpedizione(rs.getDouble("speseSpedizione"));
+                bean.setQuantitaAcquisto(rs.getInt("quantitaAcquisto"));
+                bean.setDataConsegna(rs.getDate("dataConsegna"));
+                bean.setMetodoPagamento(paymentModel.doRetrieveByKey(rs.getString("metodoPagamento")));
+                
+                orders.add(bean);
+            }
+
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        
+        for(OrderBean order : orders){
+        	System.out.println("Ordine:");
+        	System.out.println(order.getId());
+        }
+        
+        return orders;
+    }
+
 
 
     public synchronized boolean doDelete(int id) throws SQLException {
