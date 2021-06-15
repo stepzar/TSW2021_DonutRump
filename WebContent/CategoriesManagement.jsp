@@ -10,8 +10,8 @@
  	
  	//**************controllo di sicurezza: Solo l'admin può accedere a questa pagina di inserimento prodotto**************
  	UserBean user = (UserBean) request.getSession().getAttribute("current_user");
- 	if ( user == null || !(user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) ) {
- 		response.sendRedirect("./Product");	
+ 	if ( user == null || !(user.isAdmin())) {
+ 		response.sendRedirect("Login.jsp");	
  		return;
  	}
 %>

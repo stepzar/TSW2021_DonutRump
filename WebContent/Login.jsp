@@ -47,7 +47,7 @@
 				<br>
 				<a href="#">Password Dimenticata?</a>
 				<br>
-				<a href="Signup.jsp">Registrati</a>		
+				<a href="Signup.jsp">Registrati</a>
 			
 			</form>
 		</div>

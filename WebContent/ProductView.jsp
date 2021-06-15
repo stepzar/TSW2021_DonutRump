@@ -121,7 +121,7 @@
 			<ul>
 				<li> <a href="AdminInsert.jsp"> Inserisci nuovo prodotto </a> </li>
 				<li> <a href="CategoriesManagement.jsp"> Gestione categorie </a></li>
-				<li> <a href="Stefano.jsp"> Visualizza ordini </a></li>
+				<li> <a href="AdminOrders.jsp"> Visualizza ordini </a></li>
 			</ul>
 		</div>
 		<% 

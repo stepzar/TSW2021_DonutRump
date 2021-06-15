@@ -146,8 +146,45 @@ public class UserDAO {
 		return bean;
 	}
 	
+	public synchronized UserBean searchUser (String nome, String cognome) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
 	
-
+		UserBean bean = new UserBean();
+	
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE nome = ? and cognome = ? LIMIT 1";
+	
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, nome);
+			preparedStatement.setString(2, cognome);
+			
+			ResultSet rs = preparedStatement.executeQuery();
+		
+			while (rs.next()) { 				
+				bean.setId(rs.getInt("id"));
+				bean.setNome(rs.getString("nome"));
+                bean.setCognome(rs.getString("cognome"));
+				bean.setEmail(rs.getString("email"));
+				bean.setAdmin(rs.getBoolean("isAdmin"));
+                bean.setTelefono(rs.getString("telefono"));
+                bean.setPswd(rs.getString("pswd"));
+			}
+		} 
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				} 
+			finally {
+				if (connection != null)
+					connection.close();
+				}
+			}
+		return bean;
+	}
+	
 	public synchronized boolean doDelete(int code) throws SQLException {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
