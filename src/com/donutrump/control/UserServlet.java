@@ -36,7 +36,7 @@ public class UserServlet extends HttpServlet {
 				UserBean bean = model.verifyUser(email, password); //verifyUser ci va qui
 				System.out.println(bean);
 				
-				if(!bean.getEmail().equals(email)) {
+				if(!bean.getEmail().equals(email) || (bean.getEmail().equals("") || bean.getPswd().equals("")) ) { /*se per qualunque caso nel DB sarà presente un utente con stringhe vuote, esso non sarà preso in considerazione*/
 					// non esiste
 					System.out.println("Utente Non Trovato");
 					request.setAttribute("utente_non_trovato", "true");

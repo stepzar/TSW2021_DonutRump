@@ -8,48 +8,47 @@
 
 <!DOCTYPE html> 
 <html>
-<%@ page contentType="text/html; charset=UTF-8"%>
 	<head>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1256">
+		<link rel="stylesheet" href="styles/formStyle.css" type="text/css"/>
+        <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 		<title>Accedi</title>
 	</head>
 
 	<body>
-		<br>
-		<div style="width:350px; margin: 0 auto; text-align: center;">
-			<h1 style="font-weight: 200;">Accedi</h1><br>
+		<div class="wrapper fadeInDown">
+		  <div id="formContent">
+			 <!-- Tabs Titles -->
+			<h2 class="active" style="cursor:default;"> ACCEDI </h2>
+      		
+      		<!-- Icon -->
+      		<div class="fadeIn first">
+        		<img src="images/userIconBlue.gif" id="icon" alt="User Icon" />
+      		</div>
 		
 			<form action="User" method="post">
 			
 				<input type="hidden" name="action" value="login"/>
-				
-				<div class="form-group">
-					<input type="email" class="form-control" placeholder="E-mail" name="email" autocomplete="on">
-				</div>	
-				<div class="form-group">
-					<input type="password" class="form-control" placeholder="Password" name="password">
-				</div>
-				
+				<input type="email" id="login" class="fadeIn second" name="email" placeholder="email">
+        		<input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
+      
 				<%
 					if(utente_non_trovato != null && utente_non_trovato.equals("true")){
 				%>
 				
-				<div class="alert alert-danger" role="alert">
-				  Password o Email non corrette
+				<div class="alert-danger" role="alert">
+				  *Password o Email non corretti
 				</div><br>
 				<%
 					}
 				%>	
-				
-				<input type="submit" class="btn btn-primary btn-lg" value="Accedi">
-				<br>
-				<br>
-				<a href="#">Password Dimenticata?</a>
-				<br>
-				<a href="Signup.jsp">Registrati</a>
-			
+				<input type="submit" class="fadeIn fourth" value="Log In">
+				<input type="reset" class="fadeIn fourth" value="Annulla">
+				<!-- Remind Passowrd -->
+      			<div id="formFooter">
+        			<a class="underlineHover" href="Signup.jsp">Registrati</a>
+      			</div>	
 			</form>
 		</div>
+	   </div>
 	</body>
 </html>

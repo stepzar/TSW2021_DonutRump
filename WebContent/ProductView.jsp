@@ -38,6 +38,7 @@
 		}
 		else{%>
 			<div style="text-align: right; padding: 10px;">
+				<a href="#">Area Utente</a>
 				<a href="User?action=logout">Esci</a>
 			</div>
 	<%
@@ -46,8 +47,21 @@
 	
 	<div style="margin: 0 auto; text-align: center;">
 		
-		<h2><a href="Product?action=cart">Carrello</a></h2>
-	
+		<%  if (user==null) { %>
+		
+			<h2><a href="Product?action=cart">Carrello</a></h2>
+		
+		<% } 
+			else {	
+				if (!user.isAdmin()) { %>
+					<h2><a href="Product?action=cart">Carrello</a></h2>
+			
+			<% } else { %>
+					<!-- NADA: non visualizza il carrello, perchè sarà l'admin -->
+			<% } %>
+		
+		<% } %>
+		
 		<a href="Product">List</a>
 		<table border="1" style="width:500px; margin: 0 auto; text-align: center;">
 			<tr>
@@ -72,7 +86,7 @@
 				<td>
 	
 				<% 
-				if (user!=null && user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) {
+				if (user!=null && user.isAdmin()) {
 				%>
 					<a href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br>
 					<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli/Modifica</a><br>
@@ -81,20 +95,20 @@
 				else { 
 				%>	
 					<a href="Product?action=read&id=<%=bean.getId()%>">Dettagli</a><br>
-				<% 
-				} 
-				%>	
+					
 				
 			<%
+					
 					if(bean.isDisponibilita()){
 			%>
 					<a href="Product?action=addcart&id=<%=bean.getId()%>" class="btn btn-primary btn-sm">Aggiungi al Carrello</a></td> 
 			<%
 					}else{
 			%>
-					<a href="#" class="btn btn-secondary btn-sm disabled">Aggiungi al Carrello</a>
+					<a href="#" class="btn btn-secondary btn-sm disabled">Non disponibile</a>
 			<%
 					}
+				}	
 			%>
 	 		</tr>
 	 		
@@ -113,7 +127,7 @@
 		
 		<% 
 		// CONTROLLO DI SICUREZZA
-		if (user!=null && user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) {
+		if (user!=null && user.isAdmin()) {
 		%>
 		
 		<div class="admin_functions" style="text-align: center; width:20%"> <!-- Qua ci va il CSS per le liste -->
@@ -126,7 +140,7 @@
 		</div>
 		<% 
 		} else {/* does not show it */}
-		%>
+		%> 
 
 </body>
 </html>
