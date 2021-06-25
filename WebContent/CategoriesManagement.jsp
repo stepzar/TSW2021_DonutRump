@@ -21,48 +21,58 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Categorie</title>
+	<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 </head>
 
 <body>
-	<h1>[Categorie]</h1>
-	<h2><a href="Product?catalog">Torna al catalogo</a></h2>
 	
-	<h3>Categorie attualmente presenti:</h3>
+	<div class="wrapper fadeInDown">
+	  <div id="formContent">
+		 <!-- Tabs Titles -->
+		<h2 class="active" style="cursor:default;"> CATEGORIE </h2>
+		
+		<!-- Icon -->
+   		<div class="fadeIn first">
+       		<img src="images/subfolder.png" id="icon" alt="User Icon" />
+    	</div>
+		
 	
-	<ul>
-	<%
-	if (categories.size()!=0 && categories!=null) {
-		for (CategoryBean categoria : categories){	
-	%>
-	<li><%=categoria.getNome()%> <a href="Admin?action=delete_category&id=<%=categoria.getId()%>&nome=<%=categoria.getNome()%>">elimina</a></li>
-	<% 
+		<h3>Categorie attualmente presenti:</h3>
+	
+		<ul>
+		<%
+		if (categories.size()!=0 && categories!=null) {
+			for (CategoryBean categoria : categories){	
+		%>
+		<li><%=categoria.getNome()%> <a href="Admin?action=delete_category&id=<%=categoria.getId()%>&nome=<%=categoria.getNome()%>" id="deleteCategories">elimina</a></li>
+		<% 
+			}
 		}
-	}
-	else {
-	%>
-	<li><i>Non sono presenti categorie</i></li>
-	<%
-	}
-	%>
-	</ul>
-	
-	<br/><br/><br/>
-	
-	<div class="insert">
-	<h3>Inserisci una nuova categoria:</h3>
-	
-	<form action="Admin" method="post">
-		<input type="hidden" name="action" value="new_category">
+		else {
+		%>
+		<li><i>Non sono presenti categorie</i></li>
+		<%
+		}
+		%>
+		</ul>
 		
-		<label for="name">Nome:</label><br> 
-		<input name="name" type="text" maxlength="20" required placeholder="inserisci nome"><br> 
+		<br/><br/><br/>
 		
-		<input type="submit" value="Modifica">  
-		<input type="reset" value="Annulla">
+		<div class="insert">
+		<h3>Inserisci una nuova categoria:</h3>
 		
-	</form>
+		<form action="Admin" method="post">
+			<input type="hidden" name="action" value="new_category">
+			
+			<label for="name">Nome:</label><br> 
+			<input name="name" type="text" maxlength="20" class="fadeIn second" required placeholder="Nuova Categoria"><br> 
+			<div id="formFooter" style="padding: 3px 3px 3px 3px; margin-top:10%;">
+				<input type="submit" class="fadeIn fourth" value="Aggiungi">  
+				<input type="reset" class="fadeIn fourth" value="Annulla">
+			</div>	
+		</form>
+		</div>
+	  </div>
 	</div>
-
-
-</body>
+  </body>
 </html>

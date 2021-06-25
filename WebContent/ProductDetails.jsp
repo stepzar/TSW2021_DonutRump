@@ -20,7 +20,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 		<meta charset=UTF-8>
 		<title>Dettagli</title>
 	</head>
@@ -31,34 +31,41 @@
 		%>
 		
 		                       <!-- vista e modifica di un prodotto generico lato amministratore -->
-		<h1>[MODIFICA PRODOTTO]</h1>
-		<h2><a href="Product?catalog">Torna al catalogo</a></h2>
-		
-		
-		<form action="Admin" method="get">
+		                       
+	 <div class="wrapper fadeInDown">
+		  <div id="formContent">
+			 <!-- Tabs Titles -->
+			<h2 class="active" style="cursor:default;"> MODIFICA PRODOTTO </h2>
+	
+			<!-- Icon -->
+      		<div class="fadeIn first">
+        		<img src="images/package.png" id="icon" alt="User Icon"/>
+      		</div>
+ 
+		<form action="Admin" method="post">
 		<input type="hidden" name="action" value="mod_product"> 
 		<input type="hidden" name="id" value="<%=product.getId()%>"> <!-- ho bisogno di questo parametro perchè quanto c'è il disabled non viene inviata correttamente la coppia nome-valore al server, usiamo il disabled perchè neanche l'admin può modificare l'id di un prodotto -->
 		
 		<label for="id_locked">Id:</label><br> 
-		<input type="number" name="id_locked" min="0" value="<%=product.getId()%>" disabled required> <br>
+		<input type="number" name="id_locked"  class="fadeIn second" min="0" value="<%=product.getId()%>" disabled required> <br>
 			
 		<label for="name">Nome:</label><br> 
-		<input name="name" type="text" maxlength="20" value="<%=product.getNome()%>" required><br> 
+		<input name="name" type="text" class="fadeIn second" maxlength="20" value="<%=product.getNome()%>" required><br> 
 			
 		<label for="description">Descrizione:</label><br>
-		<textarea name="description" maxlength="100" rows="3" required><%=product.getDescrizione()%></textarea><br>
+		<textarea name="description" class="fadeIn second" maxlength="300" required><%=product.getDescrizione()%></textarea><br>
 			
 		<label for="price">Prezzo:</label><br> 
-		<input type="number" name="price" step="0.1" min="0" value="<%=product.getPrezzo()%>" required><br>
+		<input type="number" name="price" step="0.1" class="fadeIn second" min="0" value="<%=product.getPrezzo()%>" required><br>
 	
 		<label for="quantity">Quantità:</label><br> 
-		<input name="quantity" type="number" min="1" value="<%=product.getQuantitaDisponibile()%>" required ><br>
+		<input name="quantity" type="number" min="1" class="fadeIn third" value="<%=product.getQuantitaDisponibile()%>" required ><br>
 			
 		<label for="iva">Iva:</label><br> 
-		<input name="iva" type="number" min="1" value="<%=product.getIva()%>" required><br><br>
+		<input name="iva" type="number" min="1" class="fadeIn third" value="<%=product.getIva()%>" required><br><br>
 		
 		<label for="category">Categoria:</label>
-		<select name= "category">
+		<select name= "category" class="fadeIn third">
 		<% 
 		if (categories!=null && categories.size()!=0){
 		%>
@@ -81,15 +88,18 @@
 		<br/>
 		<br/>
 		<label for="image">Immagine:</label><br> 
-		<input type="file" name="image"><br><br><br>
+		<input type="file" class="fadeIn third" name="image"><br><br><br>
 	
-		<input type="submit" value="Modifica">  
-		<input type="reset" value="Annulla">
+		<div id="formFooter"style="padding: 3px 3px 3px 3px; margin-top:10%;">
+			<input type="submit" class="fadeIn fourth" value="Modifica">  
+			<input type="reset" class="fadeIn fourth" value="Annulla">
+		</div>
 		
 	</form>
+   </div>
+  </div>
 		
-		
-		
+		<!-- ********************************************** vista di un prodotto generico lato normal user ****************************** -->
 		<%}
 		  else if (product != null) {
 			  if (user!=null && !user.getEmail().equals("admin@donut.rump.com") && !user.getPswd().equals("root")){

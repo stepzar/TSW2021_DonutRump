@@ -27,8 +27,8 @@
 		
 			<form action="User" method="post">
 			
-				<input type="hidden" name="action" value="login"/>
-				<input type="email" id="login" class="fadeIn second" name="email" placeholder="email">
+				<input type="hidden" name="action" value="login" required/>
+				<input type="email" id="login" class="fadeIn second" name="email" placeholder="email" required>
         		<input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
       
 				<%
