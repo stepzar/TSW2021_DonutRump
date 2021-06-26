@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"
+	pageEncoding="ISO-8859-1"
 	import="java.util.*, com.donutrump.model.bean.GeneralProductBean, com.donutrump.model.bean.UserBean, 
     com.donutrump.model.bean.CategoryBean, com.donutrump.model.dao.CategoryDAO"%>
 
@@ -7,7 +7,7 @@
 CategoryDAO categoryModel = new CategoryDAO();
 ArrayList<CategoryBean> categories = categoryModel.doRetrieveAll(null);
 
-//**************controllo di sicurezza: Solo l'admin può accedere a questa pagina di inserimento prodotto**************
+//**************controllo di sicurezza: Solo l'admin pu� accedere a questa pagina di inserimento prodotto**************
 UserBean user = (UserBean) request.getSession().getAttribute("current_user");
 if (user == null || !(user.isAdmin())) {
 	response.sendRedirect("Login.jsp");
@@ -36,7 +36,7 @@ if (user == null || !(user.isAdmin())) {
         		<img src="images/insert.png" id="icon" alt="User Icon" />
       		</div>
 
-			<form action="Product" method="post">
+			<form action="Admin" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="action" value="insert">
 
 				<p>Categoria:</p>
@@ -57,7 +57,7 @@ if (user == null || !(user.isAdmin())) {
 				<%
 				}
 
-				else { //la categoria (id=1 nome=generico) è una "categoria di salvataggio" in caso di errori da parte dell'inserimento
+				else { //la categoria (id=1 nome=generico) � una "categoria di salvataggio" in caso di errori da parte dell'inserimento
 				%>
 				<label for="category">Categoria:</label><br> <input type="text"
 					name="category" value="generico" maxlength="20" required readonly><br>
@@ -74,11 +74,12 @@ if (user == null || !(user.isAdmin())) {
 					placeholder="Barretta di cioccolato Mars Protein Bar da 50g, con cuore al caramello filante e croccante copertura di cioccolato al latte in una versione proteica..."></textarea>
 				<br> <label for="price">Prezzo:</label><br> <input
 					name="price" type="number" class="fadeIn second" step=".01" min="0"
-					value="0" required><br> <label for="quantity">Quantità:</label><br>
+					value="0" required><br> <label for="quantity">Quantit�:</label><br>
 				<input name="quantity" type="number" class="fadeIn second" min="1"
 					value="1" required><br> <label for="iva">Iva:</label><br>
 				<input name="iva" style="margin-bottom: 10%;" type="number"
 					class="fadeIn second" min="1" value="22" required><br>
+				<input type="file" name="image"><br>
 				<div id="formFooter" style="padding: 3px 3px 3px 3px;">
 					<input type="submit" value="Aggiungi" class="fadeIn fourth">
 					<input type="reset" value="Reset" class="fadeIn fourth">

@@ -36,7 +36,7 @@ create table prodottoGenerico(
     iva double precision not null,
     disponibilita boolean not null,
     descrizione text(10000) not null,
-    immagine blob(10000),
+    immagine varchar(255) default "default.jpg",
     categoria int,
     foreign key (categoria) references categoria(id) on update cascade on delete set null
     );

@@ -18,6 +18,7 @@ public class GeneralProductBean implements Serializable{
 		this.disponibilita = false; 
 		this.descrizione = ""; 
 		this.categoria = null; 
+		this.immagine = "";
 	}
 	
 	public GeneralProductBean(CategoryBean categoria) {
@@ -29,6 +30,7 @@ public class GeneralProductBean implements Serializable{
 		this.disponibilita = false; 
 		this.descrizione = ""; 
 		this.categoria = categoria; 
+		this.immagine = "";
 	}
 	
 	public int getId() {
@@ -101,6 +103,14 @@ public class GeneralProductBean implements Serializable{
 		this.categoria = categoria;
 	} 
 
+	public String getImmagine() {
+		return immagine;
+	}
+
+	public void setImmagine(String immagine) {
+		this.immagine = immagine;
+	}
+
 	@Override
 	//ritorna il bean in forma di Stringa
 	public String toString() {
@@ -119,7 +129,6 @@ public class GeneralProductBean implements Serializable{
 	private boolean disponibilita; 
 	private String descrizione; 
 	private CategoryBean categoria;   //La cattegoria momentaneamente non la trattiamo, sar� impostata ad 1, il nostro sito per pra ha una sola categoria = 1.
-  
-	// private BufferedImage immagine; 
+	private String immagine; 	//path immagine
 	
 }

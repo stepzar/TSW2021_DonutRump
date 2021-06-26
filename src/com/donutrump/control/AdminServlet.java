@@ -1,6 +1,9 @@
 package com.donutrump.control;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -9,12 +12,15 @@ import java.util.Calendar;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import com.donutrump.model.bean.CategoryBean;
+import com.donutrump.model.bean.GeneralProductBean;
 import com.donutrump.model.bean.OrderBean;
 import com.donutrump.model.bean.UserBean;
 import com.donutrump.model.dao.CategoryDAO;
@@ -22,7 +28,7 @@ import com.donutrump.model.dao.GeneralProductDAO;
 import com.donutrump.model.dao.OrderDAO;
 import com.donutrump.model.dao.UserDAO;
 
-
+@MultipartConfig
 @WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	
@@ -39,6 +45,7 @@ public class AdminServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
+		String sort = request.getParameter("sort");
 		OrderDAO order_model = new OrderDAO();
 		UserDAO user_model = new UserDAO();
 	   
@@ -136,6 +143,55 @@ public class AdminServlet extends HttpServlet {
 					
 					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/CategoriesManagement.jsp");
 					dispatcher.forward(request, response);
+				}
+				
+				if (action.equalsIgnoreCase("insert")){
+					
+					String name = request.getParameter("name");
+					String description = request.getParameter("description");
+					double price = Double.parseDouble(request.getParameter("price"));
+					int quantity = Integer.parseInt(request.getParameter("quantity"));
+					double iva = Double.parseDouble(request.getParameter("iva"));
+					
+					//immagine
+					Part file = request.getPart("image");
+					String uploadPath = "C:/Users/Step/eclipse-workspace/TSW2021_DonutRump/WebContent/images/products/" + file.getSubmittedFileName();
+					
+					CategoryBean category;
+					try {
+						category = categoryModel.doRetrieveByName(request.getParameter("category"));
+						
+						GeneralProductBean bean = new GeneralProductBean(category);
+						
+						bean.setNome(name);
+						bean.setDescrizione(description);
+						bean.setPrezzo(price);
+						bean.setQuantitaDisponibile(quantity);
+						bean.setIva(iva);
+						bean.setImmagine(uploadPath);
+							
+						try {
+							model.doSave(bean);
+							
+							// salvo immagine in images/products
+							FileOutputStream fos = new FileOutputStream(uploadPath);
+							InputStream is = file.getInputStream();
+							byte[] data = new byte[is.available()];
+							is.read(data);
+							fos.write(data);
+							fos.close();
+							
+						} catch (SQLException e) {
+							System.out.println("Errore di save GeneralProductServlet insert product");
+							e.printStackTrace();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
+					dispatcher.forward(request, response);
+					
 				}
 				
 				

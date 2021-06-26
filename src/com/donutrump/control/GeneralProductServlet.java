@@ -5,13 +5,17 @@ import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest; 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import com.donutrump.model.bean.*;
 import com.donutrump.model.dao.*;
 
+@MultipartConfig
 public class GeneralProductServlet extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -25,6 +29,8 @@ public class GeneralProductServlet extends HttpServlet{
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		System.out.println("Servlet");
 		
 		String sort = request.getParameter("sort");
 		
@@ -45,7 +51,7 @@ public class GeneralProductServlet extends HttpServlet{
 		try {
 			if (action != null) {				
 				//CARRELLO
-				//modifica quantità dei prodotti
+				//modifica quantitï¿½ dei prodotti
 				if (quantita > 0 && action.equalsIgnoreCase("cart")) {
 					int id = Integer.parseInt(request.getParameter("id"));
 					cart.setQuantity(id, quantita);
@@ -83,11 +89,11 @@ public class GeneralProductServlet extends HttpServlet{
 					dispatcher.forward(request, response);
 				} 
 				
-				else if (action.equalsIgnoreCase("delete")){  //Prima di eliminarlo dal DB, noi dobbiamo eliminarlo dal carrello (se ovviamente c'è)
+				else if (action.equalsIgnoreCase("delete")){  //Prima di eliminarlo dal DB, noi dobbiamo eliminarlo dal carrello (se ovviamente c'ï¿½)
 					
 					int id = Integer.parseInt(request.getParameter("id"));
 					
-					// vedo se c'è nel carrello
+					// vedo se c'ï¿½ nel carrello
 					boolean presente = cart.isPresent(id);
 					System.out.println(presente); //debug
 					
@@ -101,27 +107,6 @@ public class GeneralProductServlet extends HttpServlet{
 						request.getSession().setAttribute("cart", cart);
 						
 					}
-				} 
-				
-				else if (action.equalsIgnoreCase("insert")){
-					
-					String name = request.getParameter("name");
-					String description = request.getParameter("description");
-					double price = Double.parseDouble(request.getParameter("price"));
-					int quantity = Integer.parseInt(request.getParameter("quantity"));
-					double iva = Double.parseDouble(request.getParameter("iva"));
-					
-					CategoryBean category = categoryModel.doRetrieveByName(request.getParameter("category"));
-					
-					GeneralProductBean bean = new GeneralProductBean(category);
-					
-					bean.setNome(name);
-					bean.setDescrizione(description);
-					bean.setPrezzo(price);
-					bean.setQuantitaDisponibile(quantity);
-					bean.setIva(iva);
-						
-					model.doSave(bean);
 				}
 				
 			}
@@ -145,6 +130,7 @@ public class GeneralProductServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{
+		
 		doGet(request, response);
 	}
 	

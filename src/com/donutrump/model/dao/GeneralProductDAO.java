@@ -54,7 +54,7 @@ public class GeneralProductDAO {
 		preparedStatement.setString(7, product.getDescrizione());
 		
 		//immagine
-		preparedStatement.setNull(8, java.sql.Types.BLOB);
+		preparedStatement.setString(8, product.getImmagine());
 		preparedStatement.setInt(9, product.getCategoria().getId());
 	
 		preparedStatement.executeUpdate(); 
