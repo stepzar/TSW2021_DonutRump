@@ -18,6 +18,17 @@ public class PaymentMethodBean implements Serializable {
 		return this.numeroCarta;
 	}
 	
+	public String getNumeroCartaCifreFinali() {
+		String ultimeTreCifre = this.numeroCarta.substring(this.numeroCarta.length()-3);
+		String numeroCartaCoperto =""; 
+
+		for (int i=0; i<((this.numeroCarta.length())-3); i++) {
+			numeroCartaCoperto += "*";
+		}
+	
+		return numeroCartaCoperto+ultimeTreCifre;
+	}
+	
 	public void setNumeroCarta(String newCn) {
 		this.numeroCarta = newCn;
 	}

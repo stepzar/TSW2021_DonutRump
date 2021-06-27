@@ -38,21 +38,23 @@ if (user == null || !(user.isAdmin())) {
 
 			<form action="Admin" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="action" value="insert">
-
+				
 				<p>Categoria:</p>
 				<div class="insertCategories">
-					<div class="boxRadio">
+
+				<div class="boxRadio">
 					<%
 					if (categories != null && categories.size() != 0) {
 						for (CategoryBean categoria : categories) {
 					%>
 					<input type="radio" name="category"
 						value="<%=categoria.getNome()%>"> <label for="category">
-						<%=categoria.getNome()%></label><br>
+						<%=categoria.getNome()%></label><br/>
 					<%
 					}
 					%>
 					</div>
+					
 				</div>
 				<%
 				}
@@ -65,8 +67,8 @@ if (user == null || !(user.isAdmin())) {
 				<%
 				}
 				%>
-				<br /> <label for="name">Nome:</label><br> <input name="name"
-					class="fadeIn second" type="text" maxlength="20" required
+				<br/> <br/> <label for="name">Nome:</label><br> 
+				<input name="name" class="fadeIn second" type="text" maxlength="20" required
 					placeholder="Mars Protein Bar"><br> <label
 					for="description">Descrizione:</label><br>
 				<textarea name="description" class="fadeIn second" maxlength="300"
@@ -74,15 +76,16 @@ if (user == null || !(user.isAdmin())) {
 					placeholder="Barretta di cioccolato Mars Protein Bar da 50g, con cuore al caramello filante e croccante copertura di cioccolato al latte in una versione proteica..."></textarea>
 				<br> <label for="price">Prezzo:</label><br> <input
 					name="price" type="number" class="fadeIn second" step=".01" min="0"
-					value="0" required><br> <label for="quantity">Quantitï¿½:</label><br>
+					value="0" required><br> <label for="quantity">Quantità:</label><br>
 				<input name="quantity" type="number" class="fadeIn second" min="1"
 					value="1" required><br> <label for="iva">Iva:</label><br>
 				<input name="iva" style="margin-bottom: 10%;" type="number"
 					class="fadeIn second" min="1" value="22" required><br>
-				<input type="file" name="image"><br>
-				<div id="formFooter" style="padding: 3px 3px 3px 3px;">
+				<label for="image">Carica immagine prodotto:</label>
+				<input type="file" name="image" class="fadeIn fourth"><br>
+				<div id="formFooter" style="padding: 3px 3px 3px 3px; margin-top:30px;">
 					<input type="submit" value="Aggiungi" class="fadeIn fourth">
-					<input type="reset" value="Reset" class="fadeIn fourth">
+					<input type="reset" value="Annulla" class="fadeIn fourth">
 				</div>
 			</form>
 		</div>

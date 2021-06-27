@@ -21,76 +21,83 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Visualizzazione Ordini</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 	</head>
 	
 	<body>
-	<br>
-		<div style="width:350px; margin-left:10px; text-align: center;">
-			<h1>Visualizza Ordini</h1>
+	
+		<div class="wrapper fadeInDown">
+	  <div id="formContent">
+		 <!-- Tabs Titles -->
+		<h2 class="active" style="cursor:default;">VISUALIZZA ORDINI</h2>
+		
+		<!-- Icon -->
+   		<div class="fadeIn first">
+       		<img src="images/vediOrdini.png" id="icon" alt="User Icon" />
+    	</div>
+		
 			<form action="Admin" method="post">
-			
+				
 				<input type="hidden" name="action" value="search_orders"> 
-				
-				<div class="form-group">
-					<input type="date" class="form-control" name="data_da">
+				<p>Dalla data:</p>
+				<input type="date" class="form-control" name="data_da">
+				<p>Alla data:</p>
+				<input type="date" class="form-control" name="data_a">
+				<p>Per Cliente:</p>
+				<input type="text" class="form-control" name="nome" placeholder="Nome cliente">
+				<input type="text" class="form-control" name="cognome" placeholder="Cognome cliente">
+				<div id="formFooter" style="padding: 3px 3px 3px 3px; margin-top:10%;">
+					<input type="submit" class="fadeIn fourth" value="Cerca">  
+					<input type="reset" class="fadeIn fourth" value="Annulla">
 				</div>
 				
-				<div class="form-group">
-					<input type="date" class="form-control" name="data_a">
-				</div>
-				
-				<div class="form-group">
-					<input type="text" class="form-control" name="nome" placeholder="Nome cliente">
-				</div>
-				
-				<div class="form-group">
-					<input type="text" class="form-control" name="cognome" placeholder="Cognome cliente">
-				</div>
-				
-				<input type="submit" class="btn btn-primary btn-lg" value="Cerca">
 			</form>
 		</div>
 		
+		<br/> <br/>
+		
 		<div>
-			<%if(cliente != null){%>
+		
+			<%if(ordini!=null){%>
 			<br>
-			<div style="margin-left:10px;">
-				<h1>Ordini di <%=cliente.getNome()%> <%=cliente.getCognome()%></h1>
-				
-				<table>
-					<tr>
-						<th>Id</th>
-						<th>Data Ordine</th>
-						<th>Importo Totale</th>
-						<th>Indirizzo</th>
-						<th>Stato</th>
-						<th>Spesa Spedizione</th>
-						<th>Quantita Acquisto</th>
-						<th>Data Consegna</th>
-						<th>Metodo Pagamento</th>
-					</tr>
+			
+			<table class="table">
+			  <thead>
+			    <tr>
+					<th scope="col">Id</th>
+					<th scope="col">Data Ordine</th>
+					<th scope="col">Importo Totale</th>
+					<th scope="col">Indirizzo</th>
+					<th scope="col">Stato</th>
+					<th scope="col">Spesa Spedizione</th>
+					<th scope="col">Quantita Acquisto</th>
+					<th scope="col">Data Consegna</th>
+					<th scope="col">Metodo Pagamento</th>     
+			    </tr>
+			  </thead>
+			  <tbody>
+			  
+				<%	for(OrderBean order: ordini){ %>
 					
-					<%
-					for(OrderBean order: ordini){
-					%>
-					<tr>
-						<td><%=order.getId()%></td>
-						<td><%=order.getDataOrdine() %></td>
-						<td><%=order.getImportoTotale() %></td>
-						<td><%=order.getIndirizzo().toString()%></td>
-						<td><%=order.getStato()%></td>
-						<td><%=order.getSpeseSpedizione()%></td>
-						<td><%=order.getQuantitaAcquisto()%></td>
-						<td><%=order.getDataConsegna()%></td>
-						<td><%=order.getMetodoPagamento().getNumeroCarta()%></td>
-					</tr>
-					<%
+			    <tr>
+					<td><%=order.getId()%></td>
+					<td><%=order.getDataOrdine()%></td>
+					<td><%=order.getImportoTotale()%></td>
+					<td><%=order.getIndirizzo().toString()%></td>
+					<td><%=order.getStato()%></td>
+					<td><%=order.getSpeseSpedizione()%></td>
+					<td><%=order.getQuantitaAcquisto()%></td>
+					<td><%=order.getDataConsegna()%></td>
+					<td><%=order.getMetodoPagamento().getNumeroCartaCifreFinali()%></td>			    
+				</tr>
+				<%
 					}	
-					%>			
-				</table>
+					%>
+			  </tbody>
+			</table>
 			</div>
 			<%} %>
-		</div>
 	</body>
 </html>
+			

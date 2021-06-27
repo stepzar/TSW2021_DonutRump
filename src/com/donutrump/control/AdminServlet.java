@@ -78,12 +78,13 @@ public class AdminServlet extends HttpServlet {
 							data_a = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 						}
 						
-						if(nome_cliente != null && cognome_cliente != null) {
+						if(!nome_cliente.equalsIgnoreCase("") && !cognome_cliente.equals("")) {
 							UserBean cliente = user_model.searchUser(nome_cliente, cognome_cliente);
 							request.setAttribute("cliente", cliente);
 							
+							
 							try {
-								ArrayList<OrderBean> orders = order_model.userDateOrders(cliente.getId(), data_da_input, data_a_input);
+								ArrayList<OrderBean> orders = order_model.userDateOrders(cliente.getId(), data_da, data_a);
 								request.setAttribute("ordini_cliente", orders);
 							} catch (SQLException e) {
 								e.printStackTrace();
@@ -91,6 +92,7 @@ public class AdminServlet extends HttpServlet {
 						}
 						
 						if((nome_cliente == null || nome_cliente.equals("")) && (cognome_cliente == null || cognome_cliente.equals(""))) {
+							
 							try {
 								ArrayList<OrderBean> orders = order_model.DateOrders(data_da, data_a);
 								request.setAttribute("ordini_cliente", orders);
@@ -168,7 +170,7 @@ public class AdminServlet extends HttpServlet {
 						bean.setPrezzo(price);
 						bean.setQuantitaDisponibile(quantity);
 						bean.setIva(iva);
-						bean.setImmagine(uploadPath);
+						bean.setImmagine("images/products/" + file.getSubmittedFileName());
 							
 						try {
 							model.doSave(bean);

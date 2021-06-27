@@ -227,6 +227,8 @@ public class OrderDAO {
             preparedStatement.setString(3, data_a);
             
             ResultSet rs = preparedStatement.executeQuery();
+            
+            System.out.println("fatto query");
 
             while (rs.next()) {
             	OrderBean bean = new OrderBean();

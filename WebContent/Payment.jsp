@@ -19,32 +19,49 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>Pagamento</title>
+		<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 	</head>
 	<body>
-		<h1>[Procedi all'ordine]</h1><br>
+		
+		<div class="wrapper fadeInDown">
+		<div id="formContent">
+			<!-- Tabs Titles -->
+			<h2 class="active" style="cursor: default;">PROCEDI CON IL PAGAMENTO</h2>
+			
+			<!-- Icon -->
+      		<div class="fadeIn first">
+        		<img src="images/payment-method.png" id="icon" alt="User Icon" />
+      		</div>
+      		
 	
-		<h3>Scelta indirizzo:</h3>
-		<div>
+		<h3>Indirizzo di spedizione:</h3>
+		
 	        <form action="Order" method="post">
-		       <!-- INDIRIZZO -->
-		        <div>
+		       <!-- INDIRIZZI -->
+		       <div id="indirizziSpedizione"> 
+		        
 				<% for(int i=0; i<indirizzi.size(); i++){%>
-				  <input type="radio" name ="id_indirizzo" value="<%=indirizzi.get(i).getId()%>"> <%=indirizzi.get(i).toString()%>
+				  <input type="radio" name ="id_indirizzo" value="<%=indirizzi.get(i).getId()%>" required> <%=indirizzi.get(i).toString()%> <br/>
 		       <%}%> 
-		       	  
-				</div>
-				
-				<h3>Scelta metodo di pagamento:</h3>
+		       	</div> 
+		
+		<h3>Carta di credito:</h3>
 				<!-- CARTA CREDITO -->
-				<div>
+				<div id="carteDiCredito">
 				<% for(int i=0; i<carte.size(); i++ ){%>
-				  <input type="radio" name ="numero_carta" value="<%=carte.get(i).getNumeroCarta()%>"> <%=carte.get(i).getNumeroCarta()%>
+				  <input type="radio" name ="numero_carta" value="<%=carte.get(i).getNumeroCarta()%>" required> <%=carte.get(i).getNumeroCartaCifreFinali()%> <br/>
 		       <%}%> 
 		       	  <input type="hidden" name="action" value="confirm_buy">
-				  <input type="hidden" name="justSelected" value="true"><br>
-				  <input type="submit" value="Conferma">
-				</div>
+				  <input type="hidden" name="justSelected" value="true">
+			   </div>
+			  
+			   <div id="formFooter" style="padding: 3px 3px 3px 3px; margin-top:10%;">
+					<input type="submit" class="fadeIn fourth" value="Procedi" >  
+					<input type="reset" class="fadeIn fourth" value="Annulla"> 
+			   </div>
 			</form>
-		</div>
-	</body>
+		
+	  </div>
+	</div>
+  </body>
 </html>
