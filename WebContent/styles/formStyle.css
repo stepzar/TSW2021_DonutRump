@@ -25,7 +25,9 @@ h2 {
   color: #cccccc;
 }
 
-/* STRUCTURE */
+/* ***********************************************************************STRUCTURE****************************************************************************** */
+
+/* PC */
 
 .wrapper {
   display: flex;
@@ -179,6 +181,47 @@ input[type=text]:placeholder, input[type=email]:placeholder, input[type=password
 .alert-danger{
 	color:rgb(255, 81, 0); 
 }
+
+
+/* PHONE */
+
+@media only screen and (max-width:640px) {
+
+  .wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column; 
+    justify-content: center;
+    width: 100%;
+    min-height: 100%;
+    padding: 20px;
+  }
+ 
+  #formContent {
+    -webkit-border-radius: 2px 2px 2px 2px;
+    border-radius: 2px 2px 2px 2px;
+    background: #fff;
+    padding: 30px;
+    width: 100%;
+    max-width: 620px;
+    position: relative;
+    padding: 0px;
+    -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+    text-align: center;
+  }
+  
+input[type=submit]  {
+	margin-bottom: 0px; 
+}
+
+
+
+}
+
+/* ***********************************************************************STRUCTURE_FINISH****************************************************************************** */
+
+
 
 
 /* ANIMATIONS */

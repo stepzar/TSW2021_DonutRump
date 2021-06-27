@@ -19,6 +19,7 @@
 
 
 <head>
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link href="ProductStyle.css" rel="stylesheet" type="text/css">

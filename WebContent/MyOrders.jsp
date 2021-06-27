@@ -10,8 +10,9 @@
 <html>
 
 	<head>
-	<meta charset="UTF-8">
-	<title>I miei Ordini</title>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<meta charset="UTF-8">
+		<title>I miei Ordini</title>
 	</head>
 	
 	<body>

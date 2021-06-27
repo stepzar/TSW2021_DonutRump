@@ -19,9 +19,10 @@ if (user == null || !(user.isAdmin())) {
 <html>
 
 <head>
-<meta charset="UTF-8">
-<title>Inserimento Prodotto</title>
-<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
+	<meta content="width=device-width, initial-scale=1" name="viewport"/>
+	<meta charset="UTF-8">
+	<title>Inserimento Prodotto</title>
+	<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 </head>
 
 <body>

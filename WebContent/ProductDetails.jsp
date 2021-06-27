@@ -21,7 +21,9 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
+		<link rel="stylesheet" href="styles/ProductDetails.css">
 		<meta charset=UTF-8>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<title>Dettagli</title>
 	</head>
 	
@@ -102,66 +104,37 @@
 		<!-- ********************************************** vista di un prodotto generico lato normal user ****************************** -->
 		<%}
 		  else if (product != null) {
-			  if (user!=null && !user.getEmail().equals("admin@donut.rump.com") && !user.getPswd().equals("root")){
+			  if (user==null || !user.isAdmin()){
 		%>
-		<h1>[DETTAGLI]</h1>
-		<h2><a href="Product?catalog">Torna al catalogo</a></h2>
 		
-		<table border="1">
-			<tr>
-				<th>Nome</th>
-				<th>Descrizione</th>
-				<th>Prezzo</th>
-				<th>Iva</th>
-				<th>Disponibilità</th>
-				<th>+ Carrello</th>
-			</tr>
-			<tr>
-				<td><%=product.getNome()%></td>
-				<td><%=product.getDescrizione()%></td>
-				<td><%=product.getPrezzo()%></td>
-				<td><%=product.getIva()%></td>
-				<td><% if(product.isDisponibilita() == true)
-				{%>Si<%}
-					else{%>No<%}%></td>
-				<td><a href="Product?action=addcart&id=<%=product.getId()%>">Aggiungi al Carrello</a>
-			</tr>
-		</table>
+		<h1>DETTAGLI</h1>
+		
+		<div class="small-container single-product">
+			<div class="row">
+				<div class="col-2">
+					<img src="<%=product.getImmagine()%>" width="80%" id="photo">
+				</div>
+				<div class="col-2">
+					<p>Home / <%=product.getCategoria().getNome()%></p>
+					<h1><%=product.getNome()%></h1>
+					<h4>€ <%=product.getPrezzo()%></h4>
+					<div class="cont-1">		
+						<input type="number" value="1" min="1" max="<%=product.getQuantitaDisponibile()%>"id="quantity">
+						<a href="Product?action=addcart&id=<%=product.getId()%>" id="put-in-cart">Aggiungi al Carrello</a>
+					</div>
+				</div>	
+			</div>
+			<div class="row-2">
+				<h1>Descrizione</h1>
+				<br>
+				<p><%=product.getDescrizione()%></p>
+			</div>
+		</div>
 		
 		<% 
 			}
-			else if (user==null) {
+		  }
 		%>
-		<h1>[DETTAGLI]</h1>
-		<h2><a href="Product?catalog">Torna al catalogo</a></h2>
 		
-		<table border="1">
-			<tr>
-				<th>Nome</th>
-				<th>Descrizione</th>
-				<th>Prezzo</th>
-				<th>Iva</th>
-				<th>Disponibilità</th>
-				<th>+ Carrello</th>
-			</tr>
-			<tr>
-				<td><%=product.getNome()%></td>
-				<td><%=product.getDescrizione()%></td>
-				<td><%=product.getPrezzo()%></td>
-				<td><%=product.getIva()%></td>
-				<td><% if(product.isDisponibilita() == true)
-				{%>Si<%}
-					else{%>No<%}%></td>
-				<td><a href="Product?action=addcart&id=<%=product.getId()%>">Aggiungi al Carrello</a>
-			</tr>
-		</table>		
-		<%
-			}
-		
-		} 
-			else { 
-		%>
-			<h3>ERRORE: Pagina non disponibile</h3>
-	<% }%>
 	</body>
 </html>

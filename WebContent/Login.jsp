@@ -9,6 +9,7 @@
 <!DOCTYPE html> 
 <html>
 	<head>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<link rel="stylesheet" href="styles/formStyle.css" type="text/css"/>
         <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
 		<title>Accedi</title>

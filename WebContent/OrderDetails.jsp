@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<meta charset="UTF-8">
 		<title>Dettaglio Ordine <%=order_id%></title>
 	</head>

@@ -1,0 +1,160 @@
+@charset "ISO-8859-1";
+
+.small-container {
+	max-width: 100%;
+	margin-top: 1%;
+	text-align: center;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+.single-product {
+	margin-top: 80px;
+}
+
+.single-product .col-2 img {
+	padding: 0px;
+}
+
+.single-product .col-2 {
+	padding: 20px;
+}
+
+.single-product h4 {
+	font-size: 22px;
+	font-weight: bold;
+	margin: 20px 0px;
+}
+
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.row-2 {
+	margin-top: 5%;
+	display: block;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.row-2 p {
+	font-size: 20px;
+	font-weight: 400;
+	margin-top: 0;
+}
+
+.col-2 {
+	flex-basis: 50%;
+	min-width: 300px;
+}
+
+.col-2 img {
+	max-width: 100%;
+	padding: 50px 0;
+}
+
+.cont-1 {
+	margin-top: 20px;
+}
+
+#quantity {
+	width: 25%;
+	border-radius: 18px;
+	line-height: 1.5em;
+}
+
+#put-in-cart {
+    border-radius: 50px;
+    border: 0px;
+    background-color: #fa8334;
+    color: white;
+    cursor: pointer;
+    font-size: large;
+    line-height: 3em;
+	width: 30%;
+}
+
+@media only screen and (max-width:480px)
+{
+	.row {
+		text-align: center;
+	}
+	
+	.col-2 {
+		flex-basis: 100%;
+	}
+	
+	.single-product .row {
+		flex-wrap: wrap;
+	}
+	
+	.single-product .col-2 {
+		padding-left: 20px 0;
+		flex-direction: column;
+	}
+	
+	.single-product h1 {
+		font-size: 26px;
+		line-height: 32px;
+	}
+	
+}
+
+@media only screen and (max-width:640px)
+{
+	
+	.small-container {
+		text-align: center;
+	}
+	
+	.row, .row-2{
+		text-align: center;
+	}
+	
+	.col-2 {
+		display: flex;
+		flex-basis: 100%;
+	}
+	
+	.col-2 img {
+		width: 50%;
+	}
+	
+	#photo{
+		margin: auto;
+		width: 100%;
+	}
+	
+	.single-product .row {
+		flex-wrap: wrap;
+		text-align: center;
+		width: -webkit-fill-available;
+	}
+	
+	.single-product .col-2 {
+		padding-left: 20px 0;
+		flex-direction: column;
+	}
+	
+	.single-product h1 {
+		font-size: 26px;
+		line-height: 32px;
+	}
+	
+	#put-in-cart {
+		width: 50%;
+		line-height: 1.5em;
+		margin: auto;
+	}
+	
+	#quantity{
+		margin: auto;
+		width: 40%;
+	}
+	
+	.cont-1{
+		display: inherit;
+	}
+}

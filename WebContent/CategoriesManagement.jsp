@@ -19,6 +19,7 @@
 <html>
 
 <head>
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
 	<meta charset="UTF-8">
 	<title>Categorie</title>
 	<link rel="stylesheet" href="styles/formStyle.css" type="text/css">

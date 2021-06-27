@@ -1,0 +1,170 @@
+@charset "ISO-8859-1";
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, sans-serif;
+}
+
+.container{
+    padding: 10px 20px;
+    background-color: #4198C1;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.logo{
+    width: 50px;
+    margin-left: 10px;
+	cursor: pointer;
+}
+
+.navbar{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+nav{
+    display: flex;
+    width: 100%;
+    height: 20px;
+}
+
+.search-icon{
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.searchbar-box{
+    margin-top: 8px;
+    margin-left: 2px;
+    width: 100%;
+}
+
+.search-box{
+    background: white;
+    width: 40%;
+    height: 35px;
+    font-size: larger;
+    border-radius: 20px;
+    border: 0px;
+    display: flex;
+}
+
+.search-button{
+
+}
+
+#searchbar{
+    border: none;
+    outline: none;
+    background: none;
+    font-size: medium;
+    width: 96%;
+}
+
+.icons-container{
+    align-items: center;
+	display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  text-align:center;
+  position: absolute;
+  right: 20px;
+  background-color: #4198C1;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+	background-color: #fff;
+}
+
+ .icons-container:hover .dropdown-content {
+	display: block;
+}
+
+.menu{
+    width: 50px;
+    cursor: pointer;
+    display: none;
+}
+
+.cart{
+	cursor: pointer;
+	color: white;
+}
+
+.user{
+    margin-top: 7px;
+    margin-bottom: 3px;
+	cursor: pointer;
+	color: white;
+	margin-right: 20px;
+}
+
+nav ul li{
+    margin-bottom: 0px;
+    margin-left: 20px;
+    list-style: none;
+    display: inline;
+}
+
+nav ul li a{
+    text-decoration: none;
+    font-size: large;
+    color: white;
+}
+
+nav ul li a:hover{
+    color: orange;
+}
+
+@media only screen and (max-width:640px){
+    nav ul{
+        width: 100%;
+        height: 100%;
+        background-color: #112f56;
+        position: absolute;
+        left: 0;
+        top: 60px;
+        z-index: 2;
+        text-align: center;
+        font-size: larger;
+    }
+	
+	.search-box {
+		display: none;
+	}
+	
+	.icons-container {
+		display: none;
+	}
+	
+    .menu{
+        display:block    
+    }
+
+    nav ul li{
+        display: block;
+        margin-top: 10px;
+    }
+
+    #menuList{
+        display: block;
+    }
+}
