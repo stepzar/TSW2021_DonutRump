@@ -85,6 +85,11 @@ public class AdminServlet extends HttpServlet {
 							
 							try {
 								ArrayList<OrderBean> orders = order_model.userDateOrders(cliente.getId(), data_da, data_a);
+								
+								for(OrderBean order : orders) {
+									System.out.println(order.getIndirizzo().toString());
+								}
+								
 								request.setAttribute("ordini_cliente", orders);
 							} catch (SQLException e) {
 								e.printStackTrace();

@@ -1,0 +1,72 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+body, html {
+	margin: 0;
+	font-family: "Poppins", Arial, sans-serif;
+	text-align: center;
+}
+
+.table{
+	margin: 2%;
+	text-align: center;
+	display: inline-block;
+}
+
+.container-info{
+	display: inline-flex;
+	width: 100%;
+	height: 5%;
+}
+
+.totale-prodotto, .spedizione-prodotto, .indirizzo-prodotto, .fattura-prodotto{
+	font-weight: bold;
+	margin-left: 1%;
+} 
+
+.fattura-prodotto{
+	position: relative;
+	margin-left: 60%;
+	margin-right: 2%;
+}
+
+.box-prodotti{
+	text-align: left;
+	margin-left: 2%;
+}
+
+.prodotto{
+	width: 100%;
+    height: 300px;
+    display: inline-flex;
+    border-width: medium;
+    border: double;
+    margin-top: 1%;
+    border-radius: 5px;
+    border-color: #fa8334;
+    padding: 1%;
+    text-align: justify;
+}
+
+.immagine-prodotto{
+	height: 250px;
+	margin: 5%;
+}
+
+.consegna{
+	font-weight: bold;
+}
+
+.quantita-prodotto{
+	margin-left: 1%;
+	display: contents;
+}
+
+.nome-prodotto{
+	font-weight: bold;
+}
+
+.informazioni-prodotto{
+	margin: 5%;
+}

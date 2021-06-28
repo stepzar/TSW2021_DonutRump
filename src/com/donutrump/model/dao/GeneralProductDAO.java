@@ -98,6 +98,7 @@ public class GeneralProductDAO {
 				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
 				bean.setIva(rs.getDouble("iva"));
 				bean.setCategoria(categoryModel.doRetrieveByKey(rs.getInt("categoria")));
+				bean.setImmagine(rs.getString("immagine"));
 			}
 		} 
 		finally {
@@ -358,6 +359,7 @@ public class GeneralProductDAO {
 				bean.setPrezzo(rs.getInt("prezzo"));
 				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
 				bean.setIva(rs.getDouble("iva"));
+				bean.setImmagine(rs.getString("immagine"));
 				products.add(bean);
 			}
 		} 

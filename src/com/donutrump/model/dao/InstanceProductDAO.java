@@ -184,5 +184,50 @@ public class InstanceProductDAO {
         }
         return products;
     }
+    
+    public synchronized Collection < InstanceProductBean > doRetrieveAllByOrdine(int ordine) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        Collection < InstanceProductBean > products = new LinkedList < InstanceProductBean > ();
+
+        String selectSQL = "SELECT * FROM " + TABLE_NAME + " where idOrdine = ?";
+
+        try {
+            connection = ds.getConnection();
+            preparedStatement = connection.prepareStatement(selectSQL);
+            preparedStatement.setInt(1, ordine);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                InstanceProductBean bean = new InstanceProductBean();
+
+                bean.setId(rs.getInt("id"));
+                bean.setIvaAcquisto(rs.getDouble("ivaAcquisto"));
+                bean.setPrezzoAcquisto(rs.getDouble("prezzoAcquisto"));
+
+                GeneralProductBean gp = new GeneralProductBean();
+                gp.setId(rs.getInt("prodottoGenerico"));
+                GeneralProductDAO gpModel = new GeneralProductDAO(); 
+                gp = gpModel.doRetrieveByKey(gp.getId());
+                bean.setProdottoGenerico(gp);
+
+                OrderDAO ordModel = new OrderDAO ();                
+                bean.setOrdine(ordModel.doRetrieveByKey(rs.getInt("idOrdine")));
+
+                products.add(bean);
+            }
+        } finally {
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } finally {
+                if (connection != null)
+                    connection.close();
+            }
+        }
+        return products;
+    }
 
 }

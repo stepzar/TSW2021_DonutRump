@@ -3,6 +3,10 @@
    
 <%
 	UserBean user = (UserBean) request.getSession().getAttribute("current_user");
+	if(user == null){
+		response.sendRedirect("Login.jsp");	
+		return;
+	}
 	OrderDAO model = new OrderDAO();
 %>    
     
@@ -10,9 +14,8 @@
 <html>
 
 	<head>
-		<meta content="width=device-width, initial-scale=1" name="viewport" />
-		<meta charset="UTF-8">
-		<title>I miei Ordini</title>
+	<meta charset="UTF-8">
+	<title>I miei Ordini</title>
 	</head>
 	
 	<body>
