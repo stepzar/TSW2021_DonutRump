@@ -2,6 +2,9 @@ package com.donutrump.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.donutrump.model.dao.AddressDAO;
+import com.donutrump.model.dao.PaymentMethodDAO;
 import com.donutrump.model.dao.UserDAO;
+import com.donutrump.model.bean.AddressBean;
+import com.donutrump.model.bean.PaymentMethodBean;
 import com.donutrump.model.bean.UserBean;
 
 @WebServlet("/UserServlet")
@@ -27,6 +34,71 @@ public class UserServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
+		
+		//area utente
+		if(action.equalsIgnoreCase("nuovaCartaPagamento")) {
+			PaymentMethodDAO paymentModel = new PaymentMethodDAO();
+			
+			UserBean user = (UserBean) request.getSession().getAttribute("current_user");
+			
+			String numeroCarta = request.getParameter("numeroCarta");
+			String cvv = request.getParameter("cvv");
+			String scadenza = request.getParameter("scadenza");
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+	        Date parsed;
+			try {
+				parsed = format.parse(scadenza);
+		        java.sql.Date sql = new java.sql.Date(parsed.getTime());
+				PaymentMethodBean bean = new PaymentMethodBean();
+				bean.setCvv(cvv);
+				bean.setNumeroCarta(numeroCarta);
+				bean.setScadenza(sql);
+				bean.setUtente(user);
+				
+				try {
+					paymentModel.doSave(bean);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/UserArea.jsp");
+			dispatcher.forward(request, response);
+
+			
+		}
+		
+		if(action.equalsIgnoreCase("nuovoinidirizzo")) {
+			AddressDAO addressModel = new AddressDAO();
+			UserBean user = (UserBean) request.getSession().getAttribute("current_user");
+			
+			String via = request.getParameter("via");
+			String provincia = request.getParameter("provincia");
+			int nCivico = Integer.parseInt(request.getParameter("nCivico"));
+			String citta = request.getParameter("citta");
+			String cap = request.getParameter("cap");
+			
+			AddressBean bean = new AddressBean();
+			bean.setVia(via);
+			bean.setCap(cap);
+			bean.setCitta(citta);
+			bean.setnCivico(nCivico);
+			bean.setProvincia(provincia);
+			bean.setUtente(user);
+			
+			try {
+				addressModel.doSave(bean);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/UserArea.jsp");
+			dispatcher.forward(request, response);
+			
+		}
 		
 		if(action.equalsIgnoreCase("login")) {
 			String email = request.getParameter("email");

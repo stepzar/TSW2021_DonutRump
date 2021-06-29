@@ -2,6 +2,7 @@ package com.donutrump.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,7 +50,29 @@ public class GeneralProductServlet extends HttpServlet{
 		}
 		
 		try {
-			if (action != null) {				
+			if (action != null) {
+				//search e filtri
+				if(action.equalsIgnoreCase("searchproduct")) {
+					String keyword = request.getParameter("keyword");
+					
+					ArrayList<GeneralProductBean> beans = model.doRetrieveAllByKeyword(keyword);
+					request.setAttribute("resultsearch", beans);
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
+					dispatcher.forward(request, response);
+
+				}
+				if(action.equalsIgnoreCase("filtercategory")) {
+					String category = request.getParameter("category");
+					
+					ArrayList<GeneralProductBean> beans = model.doRetrieveAllByCategory(category);
+					request.setAttribute("resultsearch", beans);
+					
+					RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ProductView.jsp");
+					dispatcher.forward(request, response);
+				}
+				
+				
 				//CARRELLO
 				//modifica quantit� dei prodotti
 				if (quantita > 0 && action.equalsIgnoreCase("cart")) {

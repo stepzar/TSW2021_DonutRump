@@ -15,7 +15,7 @@
 		<title>Accedi</title>
 	</head>
 
-	<body>
+	<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
 		<div class="wrapper fadeInDown">
 		  <div id="formContent">
 			 <!-- Tabs Titles -->
@@ -29,20 +29,23 @@
 			<form action="User" method="post">
 			
 				<input type="hidden" name="action" value="login" required/>
-				<input type="email" id="login" class="fadeIn second" name="email" placeholder="email" required>
-        		<input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
-      
+				
+				<input type="text" id="login" class="fadeIn second" name="email" placeholder="email" onChange="validateEmail(this), controlReturnEmail(validateEmail(this)), requiredEmail(this), controlReturnEmail(requiredEmail(this))">
+				<div class="alert-danger" role="alert" id="alertMail"> </div><br>
+        		
+        		<input type="password" id="password" class="fadeIn third" name="password" placeholder="password" onChange="requiredPassword(this), controlReturnPassword(requiredPassword(this))">
+      			<div class="alert-danger" role="alert" id="alertPassword"> </div><br>
 				<%
 					if(utente_non_trovato != null && utente_non_trovato.equals("true")){
 				%>
 				
 				<div class="alert-danger" role="alert">
-				  *Password o Email non corretti
+				  *Utente inesistente
 				</div><br>
 				<%
 					}
 				%>	
-				<input type="submit" class="fadeIn fourth" value="Log In">
+				<input type="submit" id="submit" class="fadeIn fourth" value="Log In">
 				<input type="reset" class="fadeIn fourth" value="Annulla">
 				<!-- Remind Passowrd -->
       			<div id="formFooter">
@@ -51,5 +54,11 @@
 			</form>
 		</div>
 	   </div>
+	   <!-- ******************************************SCRIPTS********************************************************* -->
+	 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+	 	<script src="scripts/validationForm.js"> window.onload=required; </script> 
+	 	
+	 	  
+	   <!-- ************************************************************************************************** -->
 	</body>
 </html>

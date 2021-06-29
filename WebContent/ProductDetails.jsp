@@ -25,9 +25,10 @@
 		<meta charset=UTF-8>
 		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<title>Dettagli</title>
+		<%@ include file="header.jsp" %>
 	</head>
 	
-	<body>
+	<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
 		<%
 			if (product != null && user!=null && user.getEmail().equals("admin@donut.rump.com") && user.getPswd().equals("root")) {
 		%>
@@ -135,6 +136,8 @@
 			}
 		  }
 		%>
+		
+		<%@ include file="Footer.html"%>
 		
 	</body>
 </html>

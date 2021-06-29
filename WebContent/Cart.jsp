@@ -14,10 +14,13 @@ GeneralProductDAO model = new GeneralProductDAO();
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link rel="stylesheet" href="styles/Cart.css">
 <title>Carrello</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="script.js"></script>
+<%@ include file="header.jsp" %>
 </head>
 
-<body>
-
+<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
+	<div style="min-height: 70vh; justify-content: space-between;">
 	<h1>Carrello</h1>
 
 	<div class="small-container cart-container">
@@ -45,7 +48,7 @@ GeneralProductDAO model = new GeneralProductDAO();
 			<tr>
 				<td>
 					<div class="cart-info">
-						<img src="Mars.png">
+						<img src="<%=bean.getImmagine()%>">
 						<div>
 							<p><%=bean.getNome()%></p>
 							<small>Prezzo: <%=bean.getPrezzo()%>
@@ -56,17 +59,12 @@ GeneralProductDAO model = new GeneralProductDAO();
 				</td>
 
 				<td>
-					<form action="Product" method="get">
-						<input type="hidden" name="action" value="cart">
-						<!-- mi serve perchè altrimenti il form mi rimanda sempre alla homepage, con questa resto nel carrello -->
-						<input type="hidden" name="id" value="<%=bean.getId()%>">
-						<input type="number" name="quantity" min="1"
-							max="<%=bean.getQuantitaDisponibile()%>" value="<%=quantita%>">
-						<input type="submit" value="Modifica quantità">
-					</form>
+					<input class="priceProduct" type="hidden" name="price" value="<%=bean.getPrezzo()%>">
+					<input class="idProduct" type="hidden" name="id" value="<%=bean.getId()%>">
+					<input class="quantity" type="number" name="quantity" min="1" max="<%=bean.getQuantitaDisponibile()%>" value="<%=quantita%>">
 
 				</td>
-				<td>EUR <%=tot%></td>
+				<td class="prezzo">EUR <%=tot%></td>
 			</tr>
 
 			<%
@@ -91,13 +89,16 @@ GeneralProductDAO model = new GeneralProductDAO();
 			
 			<div class="buy">
 				<div class="wrapperLink">	
-				<a <%if (cart.getProducts().size()!=0) {%>
+				<a <%if (cart == null || cart.getProducts().size()!=0) {%>
 					href="Order?action=buy" id="buy-button" <%} else {%> id="buy-button-disable" <%}%>>Acquista</a>
 				</div>
 			</div>
-		</div>
+		
+			</div>
+	</div>
 	</div>
 
-
 </body>
+
+<%@ include file="Footer.html"%>
 </html>

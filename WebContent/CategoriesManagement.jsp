@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 </head>
 
-<body>
+<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
 	
 	<div class="wrapper fadeInDown">
 	  <div id="formContent">

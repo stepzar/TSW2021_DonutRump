@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"
-	import="com.donutrump.model.bean.*"%>
+	import="com.donutrump.model.bean.*, java.util.ArrayList"%>
 	
 <%
-UserBean user = (UserBean) request.getSession().getAttribute("current_user");
+UserBean userHeader = (UserBean) request.getSession().getAttribute("current_user");
 %>
 
 <!DOCTYPE html>
@@ -21,22 +21,29 @@ UserBean user = (UserBean) request.getSession().getAttribute("current_user");
       <input type="checkbox" id="show-menu">
       <label for="show-menu" class="menu-icon"><i class="fas fa-bars"></i></label>
       <div class="content">
-      <div class="logo"><a href="#"><img class="logo-img" src="images/logo.png" alt="Logo"></a></div>
+      <div class="logo"><a href="ProductView.jsp"><img class="logo-img" src="images/logo.png" alt="Logo"></a></div>
         <ul class="links">
-          <li><a class="login" href="#">Accedi/Registrati</a></li>
-          <li><a href="#">Dolci</a></li>
-          <li><a href="#">Salati</a></li>
-          <li><a href="#">Bevande</a></li>
+        <%
+        if(userHeader == null){
+        %>
+          <li><a class="login" href="Login.jsp">Accedi/Registrati</a></li>
+        <%}else{%>
+          <li><a class="login" href="UserArea.jsp">Area Utente</a></li>
+        <%} %>
+          <li><a href="Product?action=filtercategory&category=dolce">Dolci</a></li>
+          <li><a href="Product?action=filtercategory&category=salato">Salati</a></li>
+          <li><a href="Product?action=filtercategory&category=bevande">Bevande</a></li>
           	<%
-			if (user == null || !user.isAdmin()) {
+			if (userHeader == null || !userHeader.isAdmin()) {
 			%>
           <li id="li-cart"><a href="Product?action=cart"><img class="cart" src="images/cart.png" alt="Carrello" srcset=""></a></li>
           	<%}%>
         </ul>
       </div>
       <label for="show-search" class="search-icon"><i class="fas fa-search"></i></label>
-      <form action="#" class="search-box">
-        <input type="text" placeholder="Cerca..." required>
+      <form action="Product" class="search-box" method="get">
+      	<input type="hidden" name="action" value="searchproduct">
+        <input id="searchbar" type="text" name="keyword" placeholder="Cerca..." required>
         <button type="submit" class="go-icon"><i class="fas fa-long-arrow-alt-right"></i></button>
       </form>
     </nav>

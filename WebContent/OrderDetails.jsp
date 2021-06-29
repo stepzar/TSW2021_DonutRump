@@ -14,9 +14,10 @@
 		<meta content="width=device-width, initial-scale=1" name="viewport" />
 		<link rel="stylesheet" href="styles/orderdetails.css">
 		<title>Dettaglio Ordine <%=order_id%></title>
+		<%@ include file="header.jsp" %>
 	</head>
 	
-	<body>
+	<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
 	
 			<%
 				OrderBean bean = model.doRetrieveByKey(order_id);
@@ -48,7 +49,11 @@
 			</div>
 
 			<div class="box-prodotti">
+				<%if(bean.getDataConsegna() != null){ %>
 				<p class="consegna">Consegnato il: <%=bean.getDataConsegna()%></p>
+				<%}else{ %>
+				<p class="consegna">Ancora non consegnato...</p>
+				<%} %>
 				
 				<div class="prodotti">
 						<%
@@ -89,5 +94,7 @@
 			</div>
 
 		</div>
+	
+		
 	</body>
 </html>

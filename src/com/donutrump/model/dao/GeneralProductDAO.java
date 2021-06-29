@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -112,6 +113,92 @@ public class GeneralProductDAO {
 				}
 			}
 		return bean;
+	}
+	
+	public synchronized ArrayList<GeneralProductBean> doRetrieveAllByKeyword(String keyword) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+	
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE nome LIKE " + "'%" + keyword + "%'";
+		
+		System.out.println(selectSQL);
+		
+		ArrayList<GeneralProductBean> beans = new ArrayList<GeneralProductBean>();
+		
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+		
+			ResultSet rs = preparedStatement.executeQuery();
+		
+			while (rs.next()) {
+				GeneralProductBean bean = new GeneralProductBean();
+				bean.setId(rs.getInt("id"));
+				bean.setNome(rs.getString("nome"));
+				bean.setDescrizione(rs.getString("descrizione"));
+				bean.setPrezzo(rs.getInt("prezzo"));
+				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
+				bean.setIva(rs.getDouble("iva"));
+				bean.setCategoria(categoryModel.doRetrieveByKey(rs.getInt("categoria")));
+				bean.setImmagine(rs.getString("immagine"));
+				beans.add(bean);
+			}
+		} 
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				} 
+			finally {
+				if (connection != null)
+					connection.close();
+				}
+			}
+		return beans;
+	}
+	
+	public synchronized ArrayList<GeneralProductBean> doRetrieveAllByCategory(String category) throws SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		
+		CategoryDAO categoryModel = new CategoryDAO();
+		int idCategoria = categoryModel.doRetrieveByName(category).getId();
+	
+		String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE categoria = ?";
+		
+		ArrayList<GeneralProductBean> beans = new ArrayList<GeneralProductBean>();
+		
+		try {
+			connection = ds.getConnection();
+			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setInt(1, idCategoria);
+		
+			ResultSet rs = preparedStatement.executeQuery();
+		
+			while (rs.next()) {
+				GeneralProductBean bean = new GeneralProductBean();
+				bean.setId(rs.getInt("id"));
+				bean.setNome(rs.getString("nome"));
+				bean.setDescrizione(rs.getString("descrizione"));
+				bean.setPrezzo(rs.getInt("prezzo"));
+				bean.setQuantitaDisponibile(rs.getInt("quantita_disponibile"));
+				bean.setIva(rs.getDouble("iva"));
+				bean.setCategoria(categoryModel.doRetrieveByKey(rs.getInt("categoria")));
+				bean.setImmagine(rs.getString("immagine"));
+				beans.add(bean);
+			}
+		} 
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				} 
+			finally {
+				if (connection != null)
+					connection.close();
+				}
+			}
+		return beans;
 	}
 
 	public synchronized void updateQuantity (int id, int newQuantity) throws SQLException {  

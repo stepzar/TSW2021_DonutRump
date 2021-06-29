@@ -14,12 +14,15 @@
 <html>
 
 	<head>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
 	<title>I miei Ordini</title>
+	<%@ include file="header.jsp" %>
 	</head>
 	
 	<body>
-		<h1>Gli ordini di: ${user.getNome()}</h1>
+		<h1 style="margin-bottom:100px;">Gli ordini di: ${user.getNome()}</h1>
 		<table border="1" style="width:500px; margin: 0 auto; text-align: center;">
 			<tr>
 				<th>Data Ordine</th>

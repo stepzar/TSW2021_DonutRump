@@ -22,7 +22,7 @@
 		<title>Pagamento</title>
 		<link rel="stylesheet" href="styles/formStyle.css" type="text/css">
 	</head>
-	<body>
+	<body style="background-image: url('images/wallpaper.jpg'); background-size: cover;">
 		
 		<div class="wrapper fadeInDown">
 		<div id="formContent">
@@ -64,5 +64,8 @@
 		
 	  </div>
 	</div>
+	
+	<%@ include file="Footer.html"%>
+	
   </body>
 </html>

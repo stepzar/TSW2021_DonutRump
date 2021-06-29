@@ -4,12 +4,17 @@
 
 <%
 Collection<?> products = (Collection<?>) request.getAttribute("catalog");
-if (products == null) {
+ArrayList<GeneralProductBean> beans = (ArrayList<GeneralProductBean>) request.getAttribute("resultsearch");
+
+if (products == null && beans == null) {
 	response.sendRedirect("./Product");
 	return;
 }
 
+System.out.println("product view");
+
 GeneralProductBean product = (GeneralProductBean) request.getAttribute("product");
+UserBean user = (UserBean) request.getSession().getAttribute("current_user");
 %>
 
 <!DOCTYPE html>
@@ -22,6 +27,15 @@ GeneralProductBean product = (GeneralProductBean) request.getAttribute("product"
 <link rel="stylesheet" href="styles/productview.css">
 <meta content="width=device-width, initial-scale=1" name="viewport" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	$("div").hover(function(){
+	  $(this).css("color", "red");
+	  }, function(){
+	  $(this).css("color", "blue");
+	});
+</script>
+
 <title>DonutRump</title>
 <%@ include file="header.jsp" %>
 </head>
@@ -42,7 +56,7 @@ GeneralProductBean product = (GeneralProductBean) request.getAttribute("product"
 			</tr>
 			-->
 			<%
-			if (products != null && products.size() != 0) {
+			if (products != null && products.size() != 0 && beans == null) {
 				Iterator<?> it = products.iterator();
 				while (it.hasNext()) {
 					GeneralProductBean bean = (GeneralProductBean) it.next();
@@ -85,7 +99,50 @@ GeneralProductBean product = (GeneralProductBean) request.getAttribute("product"
 			</div>
 			<%
 			}
-			} else {
+			}
+			else if(beans!= null && !beans.isEmpty()){
+				System.out.println("sono qua");
+				for(GeneralProductBean bean: beans){
+			%>
+							<div class="prodotto">
+
+				<a class="prodotto-immagine" href="Product?action=read&id=<%=bean.getId()%>"><img src="<%=bean.getImmagine()%>" alt="<%=bean.getImmagine()%>" style="width: 80%;"></a><br>
+
+				<h2 class="prodotto-nome">
+					<%=bean.getNome()%>
+				</h2>
+
+				<h3 class="prodotto-prezzo">
+					€ <%=bean.getPrezzo()%>
+				</h3>
+
+				<%
+				if (user != null && user.isAdmin()) {
+				%>
+
+				<a class="comando" href="Product?action=delete&id=<%=bean.getId()%>">Elimina dal catalogo</a><br> 				
+				<%
+				} else {
+				%>
+
+				<%
+				if (bean.isDisponibilita()) {
+				%>
+				<a href="Product?action=addcart&id=<%=bean.getId()%>"
+					class="comando">Aggiungi al Carrello</a>
+				<%
+				} else {
+				%>
+				<a href="#" class="btn btn-secondary btn-sm disabled">Non
+					disponibile</a>
+				<%
+				}
+				}
+				%>
+			</div>
+			<%	
+			}}
+			else {
 			%>
 			<p>Nessun prodotto disponibile nel catalogo</p>
 			<%
@@ -105,6 +162,8 @@ GeneralProductBean product = (GeneralProductBean) request.getAttribute("product"
 		</ul>
 	</div>
 	<%}%>
+	
+	<%@ include file="Footer.html"%>
+	
 </body>
-
 </html>
